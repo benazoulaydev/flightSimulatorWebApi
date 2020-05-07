@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using flightSimulatorWebApi.Models;
-using flightSimulatorWebApi.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
@@ -41,14 +40,6 @@ namespace flightSimulatorWebApi.Controllers
             flightPlans.Add(flightPlanID, infos);
             _cache.Set("FlightPlanID", flightPlanID + 1);
             return Ok(infos);
-
-            /* var flightPlan = _services.AddFlightPlan(infos);
-
-             if (flightPlan == null)
-             {
-                 return NotFound();
-             }
-             return Ok(flightPlan);*/
         }
         [HttpGet]
         [Route("FlightPlan/{id:int}")]
@@ -65,13 +56,6 @@ namespace flightSimulatorWebApi.Controllers
                 return NotFound();
             }
             return flightPlan;
-            
-            /* var flightPlan = _services.GetFlightPlanById(id);
-             if (flightPlan == null)
-             {
-                 return NotFound();
-             }
-             return flightPlan;*/
         }
 
 

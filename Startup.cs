@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using flightSimulatorWebApi.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -30,6 +29,8 @@ namespace flightSimulatorWebApi
             services.AddControllers();
             services.AddControllers().AddNewtonsoftJson();
             services.AddMemoryCache();
+            services.AddHttpClient("api", client =>
+                client.DefaultRequestHeaders.Add("Accept", "application/json"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
