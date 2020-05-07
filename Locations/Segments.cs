@@ -7,24 +7,24 @@ namespace flightSimulatorWebApi
 {
     public class Segments
     {
-        private readonly int longitude; // field
-        public int Longitude   // property
+        private readonly double longitude; // field
+        public double Longitude   // property
         {
             get { return longitude; }   // get method
         }
 
-        private readonly int latitude; // field
-        public int Latitude   // property
+        private readonly double latitude; // field
+        public double Latitude   // property
         {
             get { return latitude; }   // get method
         }
 
-        private readonly int timeSpan; // field
-        public int TimeSpan   // property
+        private readonly double timeSpan; // field
+        public double TimeSpan   // property
         {
             get { return timeSpan; }   // get method
         }
-        public Segments(int longitude, int latitude, int timespan_seconds)
+        public Segments(double longitude, double latitude, double timespan_seconds)
         {
             this.longitude = longitude;
             this.latitude = latitude;
