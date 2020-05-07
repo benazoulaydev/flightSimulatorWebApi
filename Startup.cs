@@ -28,7 +28,6 @@ namespace flightSimulatorWebApi
         {
             services.AddRazorPages();
             services.AddControllers();
-            services.AddSingleton<IFlightPlanServices, FlightPlanServices>();
             services.AddControllers().AddNewtonsoftJson();
             services.AddMemoryCache();
         }

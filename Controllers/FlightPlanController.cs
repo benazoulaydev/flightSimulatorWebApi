@@ -14,13 +14,10 @@ namespace flightSimulatorWebApi.Controllers
     [ApiController]
     public class FlightPlanController : ControllerBase
     {
-        private readonly IFlightPlanServices _services;
         private IMemoryCache _cache;
-        private int idC = 1;
 
-        public FlightPlanController(IFlightPlanServices services, IMemoryCache cache)
+        public FlightPlanController(IMemoryCache cache)
         {
-            _services = services;
             _cache = cache;
         }
 
@@ -28,9 +25,22 @@ namespace flightSimulatorWebApi.Controllers
         [Route("FlightPlan")]
         public ActionResult<FlightPlan> AddFlightPlan(FlightPlan infos)
         {
-            var flightPlan = _cache.Set(idC, infos);
-            idC++;
-            return Ok(flightPlan);
+            int flightPlanID;
+            Dictionary<int, FlightPlan> flightPlans;
+            if (!_cache.TryGetValue("FlightPlanID", out flightPlanID))
+            {
+                _cache.Set("FlightPlanID", 0);
+            }
+            //check if no value exist.
+            if (!_cache.TryGetValue("FlightPlans", out flightPlans))
+            {
+                flightPlans = new Dictionary<int, FlightPlan>();
+                _cache.Set("FlightPlans", flightPlans);
+            }
+            //add anyway to cache
+            flightPlans.Add(flightPlanID, infos);
+            _cache.Set("FlightPlanID", flightPlanID + 1);
+            return Ok(infos);
 
             /* var flightPlan = _services.AddFlightPlan(infos);
 
@@ -44,15 +54,18 @@ namespace flightSimulatorWebApi.Controllers
         [Route("FlightPlan/{id:int}")]
         public ActionResult<FlightPlan> GetFlightPlanById(int id)
         {
-            FlightPlan outFlightPlan;
-            if (_cache.TryGetValue(id, out outFlightPlan))
-            {
-                return outFlightPlan;
-            }
-            else
+            Dictionary<int, FlightPlan> flightPlans;
+            if (!_cache.TryGetValue("FlightPlans", out flightPlans))
             {
                 return NotFound();
             }
+            FlightPlan flightPlan;
+            if (!flightPlans.TryGetValue(id, out flightPlan))
+            {
+                return NotFound();
+            }
+            return flightPlan;
+            
             /* var flightPlan = _services.GetFlightPlanById(id);
              if (flightPlan == null)
              {
