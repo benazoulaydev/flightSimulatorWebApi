@@ -17,10 +17,11 @@ namespace flightSimulatorWebApi.Services
         }
         public FlightPlan AddFlightPlan(FlightPlan infos)
         {
-            infos.Id = idC;
-            _flightPlan.Add(infos.Id, infos);
-            idC++;
             return infos;
+            /*            infos.Id = idC;
+                        _flightPlan.Add(infos.Id, infos);
+                        idC++;
+                        return infos;*/
         }
 
 

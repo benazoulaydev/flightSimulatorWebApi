@@ -30,6 +30,7 @@ namespace flightSimulatorWebApi
             services.AddControllers();
             services.AddSingleton<IFlightPlanServices, FlightPlanServices>();
             services.AddControllers().AddNewtonsoftJson();
+            services.AddMemoryCache();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
