@@ -58,6 +58,9 @@ namespace flightSimulatorWebApi
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
             });
+
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
         }
     }
 }

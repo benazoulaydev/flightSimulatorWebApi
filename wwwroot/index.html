@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="lib/leaflet/leaflet.css" />
+    <script src="lib/leaflet/leaflet.js"></script>
+    <style>
+        #map {
+            position: absolute;
+            top: 200px;
+            bottom: 50px;
+            left: 50px;
+            right: 50px;
+        }
+    </style>
+    <script src="js/"></script>
+</head>
+<body>
+    <div id="map"></div>
+    <script>
+        var map = L.map('map').setView([32, 34], 10);
+
+        L.tileLayer('https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=f8r453uR6vELlt49X1ng', {
+            attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
+        }).addTo(map);
+        let x = 0;
+    </script>
+
+</body>
+</html>
