@@ -7,6 +7,8 @@ using flightSimulatorWebApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace flightSimulatorWebApi.Controllers
 {
@@ -14,6 +16,8 @@ namespace flightSimulatorWebApi.Controllers
     [ApiController]
     public class FlightPlanController : ControllerBase
     {
+        Mutex mut = new Mutex();
+        Random rand = new Random();
         private IMemoryCache _cache;
 
         public FlightPlanController(IMemoryCache cache)
@@ -25,21 +29,20 @@ namespace flightSimulatorWebApi.Controllers
         [Route("FlightPlan")]
         public ActionResult<FlightPlan> AddFlightPlan(FlightPlan infos)
         {
-            int flightPlanID;
-            Dictionary<int, FlightPlan> flightPlans;
-            if (!_cache.TryGetValue("FlightPlanID", out flightPlanID))
-            {
-                _cache.Set("FlightPlanID", 0);
-            }
+            string flightPlanID;
+            Dictionary<string, FlightPlan> flightPlans;
             //check if no value exist.
             if (!_cache.TryGetValue("FlightPlans", out flightPlans))
             {
-                flightPlans = new Dictionary<int, FlightPlan>();
+                flightPlans = new Dictionary<string, FlightPlan>();
                 _cache.Set("FlightPlans", flightPlans);
             }
+            do
+            {
+                flightPlanID = GetFlightID();
+            } while (flightPlans.ContainsKey(flightPlanID));
             //add anyway to cache
             flightPlans.Add(flightPlanID, infos);
-            _cache.Set("FlightPlanID", flightPlanID + 1);
             return Ok(infos);
         }
         [HttpGet]
@@ -159,5 +162,63 @@ namespace flightSimulatorWebApi.Controllers
             return flightPlan;
         }*/
 
+        private string GetFlightID()
+        {
+            string bigLs;
+            string smallLs;
+            string digs;
+            string newCode;
+
+            mut.WaitOne();
+
+            bigLs = GetBigLetters(rand.Next(2, 3));
+            smallLs = GetSmallLetters(rand.Next(2, 3));
+            digs = GetDigits(rand.Next(2, 3));
+
+            newCode = (bigLs + smallLs + digs);
+
+            mut.ReleaseMutex();
+            return newCode;
+        }
+
+        private string GetBigLetters(int n)
+        {
+            int codeN;
+            char codeC;
+            string result = "";
+            for (int i = 0; i < n; i++)
+            {
+                codeN = rand.Next(65, 91);
+                codeC = (char)codeN;
+                result += codeC;
+            }
+            return result;
+        }
+
+        private string GetSmallLetters(int n)
+        {
+            int codeN;
+            char codeC;
+            string result = "";
+            for (int i = 0; i < n; i++)
+            {
+                codeN = rand.Next(97, 123);
+                codeC = (char)codeN;
+                result += codeC;
+            }
+            return result;
+        }
+
+        private string GetDigits(int n)
+        {
+            int codeN;
+            string result = "";
+            for (int i = 0; i < n; i++)
+            {
+                codeN = rand.Next(0, 10);
+                result += codeN.ToString();
+            }
+            return result;
+        }
     }
 }
