@@ -20,5 +20,9 @@
     <Folder Include="Resources\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\images\logo.jpg" />
+  </ItemGroup>
+
 
 </Project>
