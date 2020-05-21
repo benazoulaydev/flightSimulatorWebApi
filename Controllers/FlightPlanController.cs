@@ -75,23 +75,23 @@ namespace flightSimulatorWebApi.Controllers
 
             foreach (KeyValuePair<int, FlightPlan> entry in flightPlans)
             {
-                DateTime entryKeyTimeAfter = entry.Value.initial_location.Time;
-                DateTime entryKeyTimeBefore = entry.Value.initial_location.Time;
-                if (entry.Value.initial_location.Time > relative_to)
+                DateTime entryKeyTimeAfter = entry.Value.initial_location.date_time;
+                DateTime entryKeyTimeBefore = entry.Value.initial_location.date_time;
+                if (entry.Value.initial_location.date_time > relative_to)
                 {
                     continue;
                 }
 
-                double latitudeBefore = entry.Value.initial_location.Latitude;
-                double longitudeBefore = entry.Value.initial_location.Longitude;
+                double latitudeBefore = entry.Value.initial_location.latitude;
+                double longitudeBefore = entry.Value.initial_location.longitude;
 
                 foreach (var segment in entry.Value.segments)
                 {
 
-                    double latitudeAfter = segment.Latitude;
-                    double longitudeAfter = segment.Longitude;
+                    double latitudeAfter = segment.latitude;
+                    double longitudeAfter = segment.longitude;
 
-                    entryKeyTimeAfter = entryKeyTimeAfter.AddSeconds(segment.TimeSpan);
+                    entryKeyTimeAfter = entryKeyTimeAfter.AddSeconds(segment.timespan_seconds);
 
                     if (entryKeyTimeBefore <= relative_to && entryKeyTimeAfter >= relative_to)
                     {
@@ -99,7 +99,7 @@ namespace flightSimulatorWebApi.Controllers
                         tmp.flight_id = entry.Key.ToString();
                         tmp.passengers = entry.Value.passengers;
                         tmp.company_name = entry.Value.company_name;
-                        tmp.date_time = entry.Value.initial_location.Time;
+                        tmp.date_time = entry.Value.initial_location.date_time;
                         //TODO lontitude lattitude to change proportinally
 
                         double prop = propFinder(entryKeyTimeBefore, entryKeyTimeAfter, relative_to);
@@ -111,10 +111,10 @@ namespace flightSimulatorWebApi.Controllers
                         flightList.Add(tmp);
                         break;
                     }
-                    entryKeyTimeBefore.AddSeconds(segment.TimeSpan);
+                    entryKeyTimeBefore.AddSeconds(segment.timespan_seconds);
 
-                    latitudeBefore = segment.Latitude;
-                    longitudeBefore = segment.Longitude;
+                    latitudeBefore = segment.latitude;
+                    longitudeBefore = segment.longitude;
 
                 }
 

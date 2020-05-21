@@ -65,22 +65,18 @@
         function drop(ev) {
             ev.preventDefault();
             var data = ev.dataTransfer.getData("text");
-
-            document.getElementById("toChange").innerHTML = "droped";
-
-            //send to the file to server
+            json_data = JSON.parse(JSON.stringify(data));
+            post_flightplan(json_data);
         }
 
         function chooseLine(id) {
             document.getElementById("toChange").innerHTML = "choose" + id;
-
-            //deletefromserver func
+            get_flightplan(id);
         }
 
         function deleteLine(id) {
             document.getElementById("toChange").innerHTML = "Deleted" + id;
-
-            //deletefromserver func
+            delete_flightplan(id);
         }
     </script>
 </head>
@@ -147,5 +143,6 @@
     <script src="lib/jquery/dist/jquery.min.js"></script>
     <script src="lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/site.js" asp-append-version="true"></script>
+    <script src="js/ajaxFlight.js" asp-append-version="true"></script>
 </body>
 </html>
