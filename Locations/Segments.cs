@@ -11,6 +11,6 @@ namespace flightSimulatorWebApi
 
         public double latitude { get; set; }
 
-        public double timeSpan { get; set; }
+        public double timespan_seconds { get; set; }
     }
 }

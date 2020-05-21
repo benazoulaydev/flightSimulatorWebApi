@@ -11,6 +11,6 @@ namespace flightSimulatorWebApi
 
         public double latitude { get; set; }
 
-        public DateTime Time { get; set; }
+        public DateTime date_time { get; set; }
     }
 }
