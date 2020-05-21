@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using flightSimulatorWebApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+
 
 namespace flightSimulatorWebApi.Controllers
 {
@@ -14,6 +16,8 @@ namespace flightSimulatorWebApi.Controllers
     [ApiController]
     public class FlightPlanController : ControllerBase
     {
+        Mutex mut = new Mutex();
+        Random rand = new Random();
         private IMemoryCache _cache;
 
         public FlightPlanController(IMemoryCache cache)
@@ -25,28 +29,28 @@ namespace flightSimulatorWebApi.Controllers
         [Route("FlightPlan")]
         public ActionResult<FlightPlan> AddFlightPlan(FlightPlan infos)
         {
-            int flightPlanID;
-            Dictionary<int, FlightPlan> flightPlans;
-            if (!_cache.TryGetValue("FlightPlanID", out flightPlanID))
-            {
-                _cache.Set("FlightPlanID", 0);
-            }
+            string flightPlanID;
+            Dictionary<string, FlightPlan> flightPlans;
             //check if no value exist.
             if (!_cache.TryGetValue("FlightPlans", out flightPlans))
             {
-                flightPlans = new Dictionary<int, FlightPlan>();
+                flightPlans = new Dictionary<string, FlightPlan>();
                 _cache.Set("FlightPlans", flightPlans);
             }
             //add anyway to cache
+            do
+            {
+                flightPlanID = GetFlightID();
+            } while (flightPlans.ContainsKey(flightPlanID));
             flightPlans.Add(flightPlanID, infos);
             _cache.Set("FlightPlanID", flightPlanID + 1);
             return Ok(infos);
         }
         [HttpGet]
         [Route("FlightPlan/{id:int}")]
-        public ActionResult<FlightPlan> GetFlightPlanById(int id)
+        public ActionResult<FlightPlan> GetFlightPlanById(string id)
         {
-            Dictionary<int, FlightPlan> flightPlans;
+            Dictionary<string, FlightPlan> flightPlans;
             if (!_cache.TryGetValue("FlightPlans", out flightPlans))
             {
                 return NotFound();
@@ -59,7 +63,7 @@ namespace flightSimulatorWebApi.Controllers
             return flightPlan;
         }
 
-        /*        [Route("Flights?relative_to={date_time:DateTime}")]*/
+        /*[Route("Flights?relative_to={date_time:DateTime}")]*/
         [HttpGet]
         [Route("Flights")]
         public ActionResult<List<Flight>> GetFlightsByDate(DateTime relative_to)
@@ -67,13 +71,13 @@ namespace flightSimulatorWebApi.Controllers
             //TODO 
             List<Flight> flightList = new List<Flight>();
 
-            Dictionary<int, FlightPlan> flightPlans;
+            Dictionary<string, FlightPlan> flightPlans;
             if (!_cache.TryGetValue("FlightPlans", out flightPlans))
             {
                 return NotFound();
             }
 
-            foreach (KeyValuePair<int, FlightPlan> entry in flightPlans)
+            foreach (KeyValuePair<string, FlightPlan> entry in flightPlans)
             {
                 DateTime entryKeyTimeAfter = entry.Value.initial_location.date_time;
                 DateTime entryKeyTimeBefore = entry.Value.initial_location.date_time;
@@ -111,6 +115,7 @@ namespace flightSimulatorWebApi.Controllers
                         flightList.Add(tmp);
                         break;
                     }
+
                     entryKeyTimeBefore.AddSeconds(segment.timespan_seconds);
 
                     latitudeBefore = segment.latitude;
@@ -129,6 +134,25 @@ namespace flightSimulatorWebApi.Controllers
 
 
         }
+
+        [HttpDelete]
+        [Route("Flights")]
+        public ActionResult<FlightPlan> DeleteFlight(string id)
+        {
+            Dictionary<string, FlightPlan> flightPlans;
+            if (!_cache.TryGetValue("FlightPlans", out flightPlans))
+            {
+                return NotFound();
+            }
+            FlightPlan flightPlan;
+            if (!flightPlans.TryGetValue(id, out flightPlan))
+            {
+                return NotFound();
+            }
+            flightPlans.Remove(id);
+            return Ok(id);
+        }
+
         public double propFinder(DateTime TimeBefore, DateTime TimeAfter, DateTime Between)
         {
             double tmp = (Between - TimeBefore) / (TimeAfter - TimeBefore);
@@ -145,19 +169,63 @@ namespace flightSimulatorWebApi.Controllers
             return firstX + (Dx * prop);
         }
 
-        /*
-         * return all flight plans 
-         * 
-        [Route("FlightPlan")]
-        public ActionResult<Dictionary<int, FlightPlan>> GetFlightPlans()
+        private string GetFlightID()
         {
-            var flightPlan = _services.GetFlightPlans();
-            if (flightPlan.Count == 0)
-            {
-                return NotFound();
-            }
-            return flightPlan;
-        }*/
+            string bigLs;
+            string smallLs;
+            string digs;
+            string newCode;
 
+            mut.WaitOne();
+
+            bigLs = GetBigLetters(rand.Next(2, 3));
+            smallLs = GetSmallLetters(rand.Next(2, 3));
+            digs = GetDigits(rand.Next(2, 3));
+
+            newCode = (bigLs + smallLs + digs);
+
+            mut.ReleaseMutex();
+            return newCode;
+        }
+
+        private string GetBigLetters(int n)
+        {
+            int codeN;
+            char codeC;
+            string result = "";
+            for (int i = 0; i < n; i++)
+            {
+                codeN = rand.Next(65, 91);
+                codeC = (char)codeN;
+                result += codeC;
+            }
+            return result;
+        }
+
+        private string GetSmallLetters(int n)
+        {
+            int codeN;
+            char codeC;
+            string result = "";
+            for (int i = 0; i < n; i++)
+            {
+                codeN = rand.Next(97, 123);
+                codeC = (char)codeN;
+                result += codeC;
+            }
+            return result;
+        }
+
+        private string GetDigits(int n)
+        {
+            int codeN;
+            string result = "";
+            for (int i = 0; i < n; i++)
+            {
+                codeN = rand.Next(0, 10);
+                result += codeN.ToString();
+            }
+            return result;
+        }
     }
 }

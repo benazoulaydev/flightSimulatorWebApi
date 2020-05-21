@@ -4,36 +4,10 @@
     <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="lib/leaflet/leaflet.css" />
     <link rel="stylesheet" href="css/site.css" />
+    <link rel="stylesheet" href="css/flight_list.css" />
     <script src="lib/leaflet/leaflet.js"></script>
     <style>
-        #div1 {
-            width: 350px;
-            height: 70px;
-            padding: 10px;
-            border: 1px solid #aaaaaa;
-        }
 
-        #div2 {
-            width: 350px;
-            height: 650px;
-            padding: 10px;
-            border: 1px solid #aaaaaa;
-        }
-
-        #internal_flights {
-            visibility: visible;
-        }
-
-        #dropLabel {
-            visibility: visible;
-            box-shadow: inset;
-            width: 350px;
-            height: 580px;
-            text-align: center;
-            text-shadow: initial;
-            padding: 290px 0;
-            border: 1px solid #aaaaaa;
-        }
     </style>
     <script src="js/"></script>
     <script>
@@ -44,7 +18,7 @@
         }
 
         function changeFillBack(ev) {
-            document.getElementById("afterFill").innerHTML = '<div class="list-group overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light" style="max-width: 300px; max-height: 650px;" id="internal_flights" role="tablist"></div>';
+            document.getElementById("afterFill").innerHTML = '<div class="list-group overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light" style="max-width: 300px; max-height: 580px;" id="internal_flights" role="tablist"></div>';
             var newScript = document.createElement("script");
             newScript.src = "../js/flights_list.js";
             document.getElementById("afterFill").appendChild(newScript);
@@ -70,7 +44,6 @@
         }
 
         function chooseLine(id) {
-            document.getElementById("toChange").innerHTML = "choose" + id;
             get_flightplan(id);
         }
 
@@ -78,6 +51,21 @@
             document.getElementById("toChange").innerHTML = "Deleted" + id;
             delete_flightplan(id);
         }
+
+        function setFlightPlanBox(flightPlan, id) { // get FlightPlan object/jason and id flight
+            document.getElementById("identifer").innerHTML = id + " for " + flightPlan.company_name;
+            document.getElementById("start").innerHTML = "Begining at " + flightPlan.initial_location.time + " in (" +
+                flightPlan.initial_location.longitude + ", " + flightPlan.initial_location.latitude + ")";
+            var endTime = flightPlan.initial_location.time;
+            /*for (var i = 0; flightPlan.lenght; i++) {
+                endTime.AddSeconds((flightPlan.segments[i].timeSpan));
+            }*/
+            /*var endLongitude = flightPlan.segments[flightPlan.segments.lenght - 1].longitude;
+            var endLatitude = flightPlan.segments[flightPlan.segments.lenght - 1].latitude;
+            document.getElementById("end").innerHTML = "Ending at " + endTime + " in (" +
+                endLongitude + ", " + endLatitude + ")";*/
+        }
+
     </script>
 </head>
 <body>
@@ -90,21 +78,16 @@
                         <div id="map"></div>
                     </div>
                 </div>
+                <br /><br /><br /><br />
                 <div class="row">
                     <div class="col">
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">Flight Plan Properties</h5>
                                 <p class="card-text">Choose flight from list or from map by clicking</p>
-                            </div>
-                            <div id="properties">
-                                <h6 id="identifer">id + company name</h6>
-                                <h6 id="location"></h6>
-                                <h6 id="time"></h6>
-                            </div>
-                            <div class="card-body">
-                                <a id="toChange" href="#" class="card-link">Card link</a>
-                                <a href="#" class="card-link">Another link</a>
+                                <h6 class="card-text" id="identifer"></h6>
+                                <h6 class="card-text" id="start"></h6>
+                                <h6 class="card-text" id="end"></h6>
                             </div>
                         </div>
                     </div>
@@ -113,10 +96,10 @@
             <div class="col-4">
                 <br />
                 <br />
-                <h5 class="mb-0 text-center" id="head_line">Internal Flights</h5>
+                <h5 class="mb-0 text-center" id="head_line">Flights</h5>
                 <br />
                 <div id="beforeFill">
-                    <div class="list-group overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light" style="max-width: 300px; max-height: 650px;" id="internal_flights" role="tablist">
+                    <div class="list-group overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light" style="max-width: 300px; max-height: 580px;" id="internal_flights" role="tablist">
                         <script src="../js/flights_list.js"></script>
                     </div>
                 </div>

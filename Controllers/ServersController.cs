@@ -28,23 +28,17 @@ namespace flightSimulatorWebApi.Controllers
         public ActionResult<Servers> AddServer(Servers infos)
         {
             Console.WriteLine(infos);
-            int serversID;
-            Dictionary<int, Servers> servers;
+            //string serversID;
+            Dictionary<string, Servers> servers;
 
-            if (!_cache.TryGetValue("serversID", out serversID))
-            {
-                //for first time
-                _cache.Set("serversID", 0);
-            }
             //check if no value exist.
             if (!_cache.TryGetValue("servers", out servers))
             {
-                servers = new Dictionary<int, Servers>();
+                servers = new Dictionary<string, Servers>();
                 _cache.Set("servers", servers);
             }
             //add anyway to cache
-            servers.Add(serversID, infos);
-            _cache.Set("serversID", serversID + 1);
+            servers.Add(infos.ServerId, infos);
             return Ok(infos);
         }
 
