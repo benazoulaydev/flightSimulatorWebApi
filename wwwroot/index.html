@@ -1,105 +1,139 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-
-
-
     <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css" />
-
-
-
     <link rel="stylesheet" href="lib/leaflet/leaflet.css" />
     <link rel="stylesheet" href="css/site.css" />
     <script src="lib/leaflet/leaflet.js"></script>
     <style>
+        #div1 {
+            width: 350px;
+            height: 70px;
+            padding: 10px;
+            border: 1px solid #aaaaaa;
+        }
+
+        #div2 {
+            width: 350px;
+            height: 650px;
+            padding: 10px;
+            border: 1px solid #aaaaaa;
+        }
+
+        #internal_flights {
+            visibility: visible;
+        }
+
+        #dropLabel {
+            visibility: visible;
+            box-shadow: inset;
+            width: 350px;
+            height: 580px;
+            text-align: center;
+            text-shadow: initial;
+            padding: 290px 0;
+            border: 1px solid #aaaaaa;
+        }
     </style>
     <script src="js/"></script>
+    <script>
+        $('.file-upload').file_upload();
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function changeFillBack(ev) {
+            document.getElementById("afterFill").innerHTML = '<div class="list-group overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light" style="max-width: 300px; max-height: 650px;" id="internal_flights" role="tablist"></div>';
+            var newScript = document.createElement("script");
+            newScript.src = "../js/flights_list.js";
+            document.getElementById("afterFill").appendChild(newScript);
+            document.getElementById("afterFill").id = "beforeFill";
+
+        }
+
+        function changeFill(ev) {
+            document.getElementById("beforeFill").innerHTML = '<label for="fileInput" id="dropLabel" ondrop="drop(event); changeFillBack(event)" ondragover="changeWhenDrag(event)" ondragenter="changeWhenDrag(event)" ondragleave="changeWhenDrag(event)" ><img id="arrow" src="images/Arrrow.png" /><br />Drag the "Flight Plan"</label>';
+            document.getElementById("beforeFill").id = "afterFill";
+        }
+
+        function changeWhenDrag(ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            var data = ev.dataTransfer.getData("text");
+            json_data = JSON.parse(JSON.stringify(data));
+            post_flightplan(json_data);
+        }
+
+        function chooseLine(id) {
+            document.getElementById("toChange").innerHTML = "choose" + id;
+            get_flightplan(id);
+        }
+
+        function deleteLine(id) {
+            document.getElementById("toChange").innerHTML = "Deleted" + id;
+            delete_flightplan(id);
+        }
+    </script>
 </head>
 <body>
-
-
-    <div class="container">
+    <div class="container" ondragleave="changeFillBack(event)" ondragenter="changeFill(event)">
         <div class="row">
             <div class="col-8">
-                <div id="map"></div>
-
+                <div class="row">
+                    <div class="col">
+                        <br /><br />
+                        <div id="map"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Flight Plan Properties</h5>
+                                <p class="card-text">Choose flight from list or from map by clicking</p>
+                            </div>
+                            <div id="properties">
+                                <h6 id="identifer">id + company name</h6>
+                                <h6 id="location"></h6>
+                                <h6 id="time"></h6>
+                            </div>
+                            <div class="card-body">
+                                <a id="toChange" href="#" class="card-link">Card link</a>
+                                <a href="#" class="card-link">Another link</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="col-4">
-
-                <div class="row">
-
-                    <div class="col-12">
-                        <p class="mb-0 text-center">Internal Flights</p>
-                        <br></br>
-                        <div class="list-group" id="list-tab" role="tablist">
-                            <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">Home</a>
-                            <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">Profile</a>
-                            <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages">Messages</a>
-                            <a class="list-group-item list-group-item-action" id="list-settings-list" data-toggle="list" href="#list-settings" role="tab" aria-controls="settings">Settings</a>
-                        </div>
-                    </div>
-                    <!--<div class="col-8">
-                        <div class="tab-content" id="nav-tabContent">
-                            <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">...</div>
-                            <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">..</div>
-                            <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">.</div>
-                            <div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list"></div>
-                        </div>
-                    </div>-->
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-8">
-                <div class="card" ">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Cras justo odio</li>
-                        <li class="list-group-item">Dapibus ac facilisis in</li>
-                        <li class="list-group-item">Vestibulum at eros</li>
-                    </ul>
-                    <div class="card-body">
-                        <a href="#" class="card-link">Card link</a>
-                        <a href="#" class="card-link">Another link</a>
+                <br />
+                <br />
+                <h5 class="mb-0 text-center" id="head_line">Internal Flights</h5>
+                <br />
+                <div id="beforeFill">
+                    <div class="list-group overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light" style="max-width: 300px; max-height: 650px;" id="internal_flights" role="tablist">
+                        <script src="../js/flights_list.js"></script>
                     </div>
                 </div>
-            </div>
-
-            <div class="col-4">
-                <div class="row">
-
-
-                    <div class="col-12">
-                        <p class="mb-0 text-center">External Flights</p>
-                        <br></br>
-                        <div class="list-group" id="list-tab" role="tablist">
-                            <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">Home</a>
-                            <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">Profile</a>
-                            <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages">Messages</a>
-                            <a class="list-group-item list-group-item-action" id="list-settings-list" data-toggle="list" href="#list-settings" role="tab" aria-controls="settings">Settings</a>
-                        </div>
-                    </div>
-                    <!--<div class="col-8">
-                        <div class="tab-content" id="nav-tabContent">
-                            <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">...</div>
-                            <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">..</div>
-                            <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">.</div>
-                            <div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list"></div>
-                        </div>
-                    </div>-->
-                </div>
+                <!--<label onclick="chooseLine(this.id)"></label>-->
+                <!--<label for="fileInput" id="dropLabel"
+                       ondrop="drop(event);changeFillBack(event)"
+                       ondragover="changeWhenDrag(event)"
+                       ondragenter="changeWhenDrag(event)"
+                       ondragleave="changeWhenDrag(event)">
+                    <img id="arrow" src="images/Arrrow.png" /><br />
+                    Drag the 'Flight Plan'
+                </label>-->
             </div>
         </div>
     </div>
-
-
     <script>
         var map = L.map('map').invalidateSize();
-
-
         L.tileLayer('https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=f8r453uR6vELlt49X1ng', {
             attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
         }).addTo(map);
@@ -109,5 +143,6 @@
     <script src="lib/jquery/dist/jquery.min.js"></script>
     <script src="lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/site.js" asp-append-version="true"></script>
+    <script src="js/ajaxFlight.js" asp-append-version="true"></script>
 </body>
 </html>

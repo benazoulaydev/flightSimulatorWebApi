@@ -7,28 +7,17 @@ namespace flightSimulatorWebApi
 {
     public class InitialLocation
     {
-        private double longitude; // field
-        public double Longitude   // property
-        {
-            get { return longitude; }   // get method
-        }
+        public double longitude; // field
 
-        private double latitude; // field
-        public double Latitude   // property
-        {
-            get { return latitude; }   // get method
-        }
+        public double latitude; // field
 
-        private DateTime time; // field
-        public DateTime Time   // property
-        {
-            get { return time; }   // get method
-        }
-        public InitialLocation(double longitude, double latitude, DateTime date_time)
-        {
-            this.longitude = longitude;
-            this.latitude = latitude;
-            this.time = date_time;
-        }
+        public DateTime date_time; // field
+
+        /* public InitialLocation(double longitude, double latitude, DateTime date_time)
+         {
+             this.longitude = longitude;
+             this.latitude = latitude;
+             this.date_time = date_time;
+         }*/
     }
 }
