@@ -26,11 +26,9 @@ for (i = 0; i < flights.length; i++) {
             "<label id='" + flights[i].flight_id + "' onclick='deleteLine(this.id)'>X</label>";
     }
 }
-tableHtml += "<a href='#' class='list-group-item list-group-item-action flex-column align-items-start'>" +
-    "<div class='d-flex w-100 justify-content-between' >" +
-    "<h8 class='mb-1'>Externals</h8>" +
-    "</div >" +
-    "</a >";
+
+tableHtml += "<div class='d-flex w-100 justify-content-between'><h5 class='mb-0 text-center'>Externals</h5></div>";
+
 for (i = 0; i < flights.length; i++) {
     if (flights[i].is_external) {
         tableHtml += "<a id='" + flights[i].flight_id + "' href='#' onclick='chooseLine(this.id)' class='list-group-item list-group-item-action flex-column align-items-start'>" +

@@ -7,28 +7,10 @@ namespace flightSimulatorWebApi
 {
     public class Segments
     {
-        private readonly double longitude; // field
-        public double Longitude   // property
-        {
-            get { return longitude; }   // get method
-        }
+        public double longitude { get; set; }
 
-        private readonly double latitude; // field
-        public double Latitude   // property
-        {
-            get { return latitude; }   // get method
-        }
+        public double latitude { get; set; }
 
-        private readonly double timeSpan; // field
-        public double TimeSpan   // property
-        {
-            get { return timeSpan; }   // get method
-        }
-        public Segments(double longitude, double latitude, double timespan_seconds)
-        {
-            this.longitude = longitude;
-            this.latitude = latitude;
-            this.timeSpan = timespan_seconds;
-        }
+        public double timeSpan { get; set; }
     }
 }
