@@ -8,6 +8,8 @@ using flightSimulatorWebApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using System.Threading;
+using System.Threading.Tasks;
 
 
 namespace flightSimulatorWebApi.Controllers
@@ -37,13 +39,16 @@ namespace flightSimulatorWebApi.Controllers
                 flightPlans = new Dictionary<string, FlightPlan>();
                 _cache.Set("FlightPlans", flightPlans);
             }
+            do
+            {
+                flightPlanID = GetFlightID();
+            } while (flightPlans.ContainsKey(flightPlanID));
             //add anyway to cache
             do
             {
                 flightPlanID = GetFlightID();
             } while (flightPlans.ContainsKey(flightPlanID));
             flightPlans.Add(flightPlanID, infos);
-            _cache.Set("FlightPlanID", flightPlanID + 1);
             return Ok(infos);
         }
         [HttpGet]
@@ -68,7 +73,6 @@ namespace flightSimulatorWebApi.Controllers
         [Route("Flights")]
         public ActionResult<List<Flight>> GetFlightsByDate(DateTime relative_to)
         {
-            //TODO 
             List<Flight> flightList = new List<Flight>();
 
             Dictionary<string, FlightPlan> flightPlans;
@@ -122,8 +126,6 @@ namespace flightSimulatorWebApi.Controllers
                     longitudeBefore = segment.longitude;
 
                 }
-
-                // do something with entry.Value or entry.Key
             }
 
             if (flightList.Count == 0)
@@ -202,6 +204,38 @@ namespace flightSimulatorWebApi.Controllers
             return result;
         }
 
+        private string GetFlightID()
+        {
+            string bigLs;
+            string smallLs;
+            string digs;
+            string newCode;
+
+            mut.WaitOne();
+
+            bigLs = GetBigLetters(rand.Next(2, 3));
+            smallLs = GetSmallLetters(rand.Next(2, 3));
+            digs = GetDigits(rand.Next(2, 3));
+
+            newCode = (bigLs + smallLs + digs);
+
+            mut.ReleaseMutex();
+            return newCode;
+        }
+
+        private string GetBigLetters(int n)
+        {
+            int codeN;
+            char codeC;
+            string result = "";
+            for (int i = 0; i < n; i++)
+            {
+                codeN = rand.Next(65, 91);
+                codeC = (char)codeN;
+                result += codeC;
+            }
+            return result;
+        }
         private string GetSmallLetters(int n)
         {
             int codeN;

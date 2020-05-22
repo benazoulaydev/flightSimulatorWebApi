@@ -52,7 +52,7 @@ namespace flightSimulatorWebApi
             app.UseRouting();
 
             app.UseAuthorization();
-
+            // change hagai
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
