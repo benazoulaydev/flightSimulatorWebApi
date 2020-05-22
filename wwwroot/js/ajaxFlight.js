@@ -19,11 +19,12 @@ $(document).ready(function () {
             dataType: 'json',
             success: function (result) {
                 display_flights(result);
-                // call function with parameter result
+                display_planes_icons(result);
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 var flights = [];
                 display_flights(flights);
+                display_planes_icons(flights);
             }
         });
 
