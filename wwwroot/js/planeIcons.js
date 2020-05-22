@@ -1,4 +1,5 @@
 ﻿let oldPlaneIcons = [];
+var selected;
 
 var blackIcon = L.icon({
     iconUrl: 'images/flight-icon-no-rotate.png',
@@ -26,7 +27,7 @@ function display_planes_icons(flights) {
             if (typeof selected !== 'undefined') {
                 selected.target.setIcon(blackIcon);
             }
-            selected = e;
+            selected = (e, i);
             e.target.setIcon(selectedIcon);
         });
         map.addLayer(planeIcons[i]);
