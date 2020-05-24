@@ -37,11 +37,12 @@ function get_flightplan(id) {
         success: function (result) {
             // call function with parameter result
             setFlightPlanBox(result, id);
+            drawFlightPlanLine(result, id);
         },
-        error: function (XMLHttpRequest, textStatus, errorThrown) {
-            var flights = [];
-            display_flights(flights);
-        }
+        // error: function (XMLHttpRequest, textStatus, errorThrown) {
+        //     var flights = [];
+        //     display_flights(flights);
+        // }
     });
 }
 

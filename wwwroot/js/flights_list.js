@@ -67,6 +67,7 @@ function chooseLine(id) {
 
 function deleteLine(id) {
     delete_flightplan(id);
+    delete_flight(id);
     document.getElementById("identifer").innerHTML = id + " has deleted";
     document.getElementById("start").innerHTML = "";
     document.getElementById("end").innerHTML = "";
