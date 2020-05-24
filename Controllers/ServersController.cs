@@ -46,7 +46,7 @@ namespace flightSimulatorWebApi.Controllers
         [Route("servers")]
         public ActionResult<List<Servers>> GetServers()
         {
-            Dictionary<int, Servers> servers;
+            Dictionary<string, Servers> servers;
             if (!_cache.TryGetValue("servers", out servers))
             {
                 return NotFound();
@@ -57,9 +57,9 @@ namespace flightSimulatorWebApi.Controllers
 
         [HttpDelete]
         [Route("servers/{id:int}")]
-        public ActionResult<Servers> DeleteServerById(int id)
+        public ActionResult<Servers> DeleteServerById(string id)
         {
-            Dictionary<int, Servers> servers;
+            Dictionary<string, Servers> servers;
             if (!_cache.TryGetValue("servers", out servers))
             {
                 return NotFound();
