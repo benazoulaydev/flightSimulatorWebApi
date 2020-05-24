@@ -114,12 +114,10 @@ namespace flightSimulatorWebApi.Controllers
                         flightList.Add(tmp);
                         break;
                     }
-
                     entryKeyTimeBefore.AddSeconds(segment.timespan_seconds);
 
                     latitudeBefore = segment.latitude;
                     longitudeBefore = segment.longitude;
-
                 }
             }
 
@@ -128,8 +126,6 @@ namespace flightSimulatorWebApi.Controllers
                 return NotFound();
             }
             return flightList;
-
-
         }
 
         [HttpDelete]
