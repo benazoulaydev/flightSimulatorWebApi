@@ -1,4 +1,6 @@
-﻿function display_flights(flights) {
+﻿var chosenID = "";
+
+function display_flights(flights) {
     tableHtml = "";
     document.getElementById("internal_flights").innerHTML = tableHtml;
     for (i = 0; i < flights.length; i++) {
@@ -29,6 +31,10 @@
                 "</a >";
         }
         document.getElementById("internal_flights").innerHTML = tableHtml;
+    }
+
+    if (chosenID != "") {
+        document.getElementById(chosenID).style.backgroundColor = "powderblue";
     }
 }
 
@@ -67,6 +73,7 @@ function drop(ev) {
 }
 
 function chooseLine(id) {
+    chosenID = id;
     get_flightplan(id);
 }
 
