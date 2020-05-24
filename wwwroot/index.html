@@ -4,85 +4,11 @@
     <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="lib/leaflet/leaflet.css" />
     <link rel="stylesheet" href="css/site.css" />
+    <link rel="stylesheet" href="css/flight_list.css" />
     <script src="lib/leaflet/leaflet.js"></script>
     <style>
-        #div1 {
-            width: 350px;
-            height: 70px;
-            padding: 10px;
-            border: 1px solid #aaaaaa;
-        }
 
-        #div2 {
-            width: 350px;
-            height: 650px;
-            padding: 10px;
-            border: 1px solid #aaaaaa;
-        }
-
-        #internal_flights {
-            visibility: visible;
-        }
-
-        #dropLabel {
-            visibility: visible;
-            box-shadow: inset;
-            width: 350px;
-            height: 580px;
-            text-align: center;
-            text-shadow: initial;
-            padding: 290px 0;
-            border: 1px solid #aaaaaa;
-        }
-    </style>
-    <script src="js/"></script>
-    <script>
-        $('.file-upload').file_upload();
-
-        function allowDrop(ev) {
-            ev.preventDefault();
-        }
-
-        function changeFillBack(ev) {
-            document.getElementById("afterFill").innerHTML = '<div class="list-group overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light" style="max-width: 300px; max-height: 650px;" id="internal_flights" role="tablist"></div>';
-            var newScript = document.createElement("script");
-            newScript.src = "../js/flights_list.js";
-            document.getElementById("afterFill").appendChild(newScript);
-            document.getElementById("afterFill").id = "beforeFill";
-
-        }
-
-        function changeFill(ev) {
-            document.getElementById("beforeFill").innerHTML = '<label for="fileInput" id="dropLabel" ondrop="drop(event); changeFillBack(event)" ondragover="changeWhenDrag(event)" ondragenter="changeWhenDrag(event)" ondragleave="changeWhenDrag(event)" ><img id="arrow" src="images/Arrrow.png" /><br />Drag the "Flight Plan"</label>';
-            document.getElementById("beforeFill").id = "afterFill";
-        }
-
-        function changeWhenDrag(ev) {
-            ev.preventDefault();
-            ev.stopPropagation();
-        }
-
-        function drop(ev) {
-            ev.preventDefault();
-            var data = ev.dataTransfer.getData("text");
-
-            document.getElementById("toChange").innerHTML = "droped";
-
-            //send to the file to server
-        }
-
-        function chooseLine(id) {
-            document.getElementById("toChange").innerHTML = "choose" + id;
-
-            //deletefromserver func
-        }
-
-        function deleteLine(id) {
-            document.getElementById("toChange").innerHTML = "Deleted" + id;
-
-            //deletefromserver func
-        }
-    </script>
+    </style> 
 </head>
 <body>
     <div class="container" ondragleave="changeFillBack(event)" ondragenter="changeFill(event)">
@@ -94,21 +20,16 @@
                         <div id="map"></div>
                     </div>
                 </div>
+                <br /><br /><br /><br />
                 <div class="row">
                     <div class="col">
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">Flight Plan Properties</h5>
                                 <p class="card-text">Choose flight from list or from map by clicking</p>
-                            </div>
-                            <div id="properties">
-                                <h6 id="identifer">id + company name</h6>
-                                <h6 id="location"></h6>
-                                <h6 id="time"></h6>
-                            </div>
-                            <div class="card-body">
-                                <a id="toChange" href="#" class="card-link">Card link</a>
-                                <a href="#" class="card-link">Another link</a>
+                                <h6 class="card-text" id="identifer"></h6>
+                                <h6 class="card-text" id="start"></h6>
+                                <h6 class="card-text" id="end"></h6>
                             </div>
                         </div>
                     </div>
@@ -117,10 +38,10 @@
             <div class="col-4">
                 <br />
                 <br />
-                <h5 class="mb-0 text-center" id="head_line">Internal Flights</h5>
+                <h5 class="mb-0 text-center" id="head_line">Flights</h5>
                 <br />
                 <div id="beforeFill">
-                    <div class="list-group overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light" style="max-width: 300px; max-height: 650px;" id="internal_flights" role="tablist">
+                    <div class="list-group overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light" style="max-width: 300px; max-height: 580px;" id="internal_flights" role="tablist">
                         <script src="../js/flights_list.js"></script>
                     </div>
                 </div>
@@ -147,5 +68,7 @@
     <script src="lib/jquery/dist/jquery.min.js"></script>
     <script src="lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/site.js" asp-append-version="true"></script>
+    <script src="js/ajaxFlight.js" asp-append-version="true"></script>
+    <script src="js/flights_list.js"></script>
 </body>
 </html>
