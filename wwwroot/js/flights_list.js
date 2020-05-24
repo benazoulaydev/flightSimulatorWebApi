@@ -58,11 +58,12 @@ function changeWhenDrag(ev) {
 }
 
 function drop(ev) {
-    ev.preventDefault();
-    var data = ev.dataTransfer.getData("text");
+    var data = ev.dataTransfer.files[0];
     json_data = JSON.parse(JSON.stringify(data));
     changeFillBack(ev);
     post_flightplan(json_data);
+
+    ev.preventDefault();
 }
 
 function chooseLine(id) {

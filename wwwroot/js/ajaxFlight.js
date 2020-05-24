@@ -40,13 +40,13 @@ function get_flightplan(id) {
     });
 }
 
-function post_flightplan(json) {
+function post_flightplan(flightPlan) {
     $.ajax({
         type: "POST",
         url: "/api/FlightPlan", // Using our resources.json file to serve results
-        dataType: 'json',
+        dataType: "json",
+        data: flightPlan,
         success: function (result) {
-            var a = result.data;
             // call function with parameter result
         }
     });
