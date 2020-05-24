@@ -50,7 +50,6 @@ function changeFillBack(ev) {
     newScript.src = "../js/flights_list.js";
     document.getElementById("afterFill").appendChild(newScript);
     document.getElementById("afterFill").id = "beforeFill";
-
 }
 
 function changeFill(ev) {
