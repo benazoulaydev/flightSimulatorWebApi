@@ -8,65 +8,7 @@
     <script src="lib/leaflet/leaflet.js"></script>
     <style>
 
-    </style>
-    <script src="js/"></script>
-    <script>
-        $('.file-upload').file_upload();
-
-        function allowDrop(ev) {
-            ev.preventDefault();
-        }
-
-        function changeFillBack(ev) {
-            document.getElementById("afterFill").innerHTML = '<div class="list-group overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light" style="max-width: 300px; max-height: 580px;" id="internal_flights" role="tablist"></div>';
-            var newScript = document.createElement("script");
-            newScript.src = "../js/flights_list.js";
-            document.getElementById("afterFill").appendChild(newScript);
-            document.getElementById("afterFill").id = "beforeFill";
-
-        }
-
-        function changeFill(ev) {
-            document.getElementById("beforeFill").innerHTML = '<label for="fileInput" id="dropLabel" ondrop="drop(event); changeFillBack(event)" ondragover="changeWhenDrag(event)" ondragenter="changeWhenDrag(event)" ondragleave="changeWhenDrag(event)" ><img id="arrow" src="images/Arrrow.png" /><br />Drag the "Flight Plan"</label>';
-            document.getElementById("beforeFill").id = "afterFill";
-        }
-
-        function changeWhenDrag(ev) {
-            ev.preventDefault();
-            ev.stopPropagation();
-        }
-
-        function drop(ev) {
-            ev.preventDefault();
-            var data = ev.dataTransfer.getData("text");
-            json_data = JSON.parse(JSON.stringify(data));
-            post_flightplan(json_data);
-        }
-
-        function chooseLine(id) {
-            get_flightplan(id);
-        }
-
-        function deleteLine(id) {
-            document.getElementById("toChange").innerHTML = "Deleted" + id;
-            delete_flightplan(id);
-        }
-
-        function setFlightPlanBox(flightPlan, id) { // get FlightPlan object/jason and id flight
-            document.getElementById("identifer").innerHTML = id + " for " + flightPlan.company_name;
-            document.getElementById("start").innerHTML = "Begining at " + flightPlan.initial_location.time + " in (" +
-                flightPlan.initial_location.longitude + ", " + flightPlan.initial_location.latitude + ")";
-            var endTime = flightPlan.initial_location.time;
-            /*for (var i = 0; flightPlan.lenght; i++) {
-                endTime.AddSeconds((flightPlan.segments[i].timeSpan));
-            }*/
-            /*var endLongitude = flightPlan.segments[flightPlan.segments.lenght - 1].longitude;
-            var endLatitude = flightPlan.segments[flightPlan.segments.lenght - 1].latitude;
-            document.getElementById("end").innerHTML = "Ending at " + endTime + " in (" +
-                endLongitude + ", " + endLatitude + ")";*/
-        }
-
-    </script>
+    </style> 
 </head>
 <body>
     <div class="container" ondragleave="changeFillBack(event)" ondragenter="changeFill(event)">
@@ -127,5 +69,6 @@
     <script src="lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/site.js" asp-append-version="true"></script>
     <script src="js/ajaxFlight.js" asp-append-version="true"></script>
+    <script src="js/flights_list.js"></script>
 </body>
 </html>

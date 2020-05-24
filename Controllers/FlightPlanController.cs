@@ -52,7 +52,7 @@ namespace flightSimulatorWebApi.Controllers
             return Ok(infos);
         }
         [HttpGet]
-        [Route("FlightPlan/{id:int}")]
+        [Route("FlightPlan/{id}")]
         public ActionResult<FlightPlan> GetFlightPlanById(string id)
         {
             Dictionary<string, FlightPlan> flightPlans;
@@ -108,7 +108,6 @@ namespace flightSimulatorWebApi.Controllers
                         tmp.passengers = entry.Value.passengers;
                         tmp.company_name = entry.Value.company_name;
                         tmp.date_time = entry.Value.initial_location.date_time;
-                        //TODO lontitude lattitude to change proportinally
 
                         double prop = propFinder(entryKeyTimeBefore, entryKeyTimeAfter, relative_to);
 
@@ -138,7 +137,7 @@ namespace flightSimulatorWebApi.Controllers
         }
 
         [HttpDelete]
-        [Route("Flights")]
+        [Route("Flights/{id}")]
         public ActionResult<FlightPlan> DeleteFlight(string id)
         {
             Dictionary<string, FlightPlan> flightPlans;
