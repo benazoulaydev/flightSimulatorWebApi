@@ -10,18 +10,20 @@ function get_flight_time() {
 
     //var today = new Date();
     //var time = today.getFullYear() + "-" + String(today.getMonth()).padStart(2, "0") + "-" + String(today.getDay()).padStart(2, "0") + "T" + String(today.getHours()).padStart(2, "0") + ":" + String(today.getMinutes()).padStart(2, "0") + ":" + String(today.getSeconds()).padStart(2, "0");
-    console.log(time);
+    //console.log(time);
     $.ajax({
         type: "GET",
         url: "/api/Flights/?relative_to=" + time + "&sync_all", // Using our resources.json file to serve results
         dataType: 'json',
         success: function (result) {
             display_flights(result);
+            display_planes_icons(result);
             // call function with parameter result
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
             var flights = [];
             display_flights(flights);
+            display_planes_icons(flights);
         }
     });
 }

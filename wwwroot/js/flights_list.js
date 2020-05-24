@@ -28,7 +28,7 @@
     }
 }
 
-$('.file-upload').file_upload();
+// $('.file-upload').file_upload();
 
 function allowDrop(ev) {
     ev.preventDefault();
