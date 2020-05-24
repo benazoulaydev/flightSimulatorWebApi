@@ -3,11 +3,13 @@
     document.getElementById("internal_flights").innerHTML = tableHtml;
     for (i = 0; i < flights.length; i++) {
         if (!flights[i].is_external) {
+            var long = flights[i].longitude.toString().substring(0, 5);
+            var lati = flights[i].latitude.toString().substring(0, 5);
             tableHtml += "<a id='" + flights[i].flight_id + "' href='#' onclick='chooseLine(this.id)' class='list-group-item list-group-item-action flex-column align-items-start'>" +
                 "<div class='d-flex w-100 justify-content-between' >" +
                 "<h5 class='mb-1'>" + flights[i].company_name + " " + flights[i].date_time + "</h5>" +
                 "</div >" +
-                "<small>(" + flights[i].longitude + ", " + flights[i].latitude + ")</small>" +
+                "<small>(" + long + ", " + lati + ")</small>" +
                 "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
                 "</a >" +
                 "<label id='" + flights[i].flight_id + "' onclick='deleteLine(this.id)'>X</label>";
@@ -17,11 +19,13 @@
 
     for (i = 0; i < flights.length; i++) {
         if (flights[i].is_external) {
+            var long = flights[i].longitude.toString().substring(0, 5);
+            var lati = flights[i].latitude.toString().substring(0, 5);
             tableHtml += "<a id='" + flights[i].flight_id + "' href='#' onclick='chooseLine(this.id)' class='list-group-item list-group-item-action flex-column align-items-start'>" +
                 "<div class='d-flex w-100 justify-content-between' >" +
                 "<h5 class='mb-1'>" + flights[i].company_name + " " + flights[i].date_time + "</h5>" +
                 "</div >" +
-                "<small>(" + flights[i].longitude + ", " + flights[i].latitude + ")</small>" +
+                "<small>(" + long + ", " + lati + ")</small>" +
                 "</a >";
         }
         document.getElementById("internal_flights").innerHTML = tableHtml;
@@ -68,20 +72,23 @@ function chooseLine(id) {
 function deleteLine(id) {
     delete_flightplan(id);
     document.getElementById("identifer").innerHTML = id + " has deleted";
-    document.getElementById("start").innerHTML = "";
-    document.getElementById("end").innerHTML = "";
+    document.getElementById("startPosition").innerHTML = "";
+    document.getElementById("endPosition").innerHTML = "";
 }
 
-function setFlightPlanBox(flightPlan, id) { // get FlightPlan object/jason and id flight
+function setFlightPlanBox(flightPlan, id) {
+    var long = flightPlan.initial_location.longitude.toString().substring(0, 5);
+    var lati = flightPlan.initial_location.latitude.toString().substring(0, 5);
+
     document.getElementById("identifer").innerHTML = id + " for " + flightPlan.company_name;
-    document.getElementById("start").innerHTML = "Begining at " + flightPlan.initial_location.time + " in (" +
-        flightPlan.initial_location.longitude + ", " + flightPlan.initial_location.latitude + ")";
-    var endTime = flightPlan.initial_location.time;
-    /*for (var i = 0; flightPlan.lenght; i++) {
-        endTime.AddSeconds((flightPlan.segments[i].timeSpan));
-    }*/
-    /*var endLongitude = flightPlan.segments[flightPlan.segments.lenght - 1].longitude;
-    var endLatitude = flightPlan.segments[flightPlan.segments.lenght - 1].latitude;
-    document.getElementById("end").innerHTML = "Ending at " + endTime + " in (" +
-        endLongitude + ", " + endLatitude + ")";*/
+    document.getElementById("startPosition").innerHTML = "Begining at " + flightPlan.initial_location.date_time + " in (" +
+        long + ", " + lati + ")";
+    var endTime = new Date(flightPlan.initial_location.date_time);
+    for (i = 0; i < flightPlan.segments.length; i++) {
+        endTime.setSeconds(endTime.getSeconds() + flightPlan.segments[i].timespan_seconds);
+    }
+    var endLongitude = flightPlan.segments[flightPlan.segments.length - 1].longitude.toString().substring(0, 5);
+    var endLatitude = flightPlan.segments[flightPlan.segments.length - 1].latitude.toString().substring(0, 5);
+    var endTimeFormat = endTime.getUTCFullYear() + "-" + (endTime.getUTCMonth() + 1) + "-" + endTime.getDate() + "T" + endTime.getUTCHours() + ":" + endTime.getMinutes() + ":" + endTime.getSeconds();
+    document.getElementById("endPosition").innerHTML = "Ending at " + endTimeFormat + " in (" + endLongitude + ", " + endLatitude + ")";
 }
