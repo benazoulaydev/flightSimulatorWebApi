@@ -39,10 +39,6 @@ namespace flightSimulatorWebApi.Controllers
                 flightPlans = new Dictionary<string, FlightPlan>();
                 _cache.Set("FlightPlans", flightPlans);
             }
-            do
-            {
-                flightPlanID = GetFlightID();
-            } while (flightPlans.ContainsKey(flightPlanID));
             //add anyway to cache
             do
             {
@@ -203,38 +199,6 @@ namespace flightSimulatorWebApi.Controllers
             return result;
         }
 
-        private string GetFlightID()
-        {
-            string bigLs;
-            string smallLs;
-            string digs;
-            string newCode;
-
-            mut.WaitOne();
-
-            bigLs = GetBigLetters(rand.Next(2, 3));
-            smallLs = GetSmallLetters(rand.Next(2, 3));
-            digs = GetDigits(rand.Next(2, 3));
-
-            newCode = (bigLs + smallLs + digs);
-
-            mut.ReleaseMutex();
-            return newCode;
-        }
-
-        private string GetBigLetters(int n)
-        {
-            int codeN;
-            char codeC;
-            string result = "";
-            for (int i = 0; i < n; i++)
-            {
-                codeN = rand.Next(65, 91);
-                codeC = (char)codeN;
-                result += codeC;
-            }
-            return result;
-        }
         private string GetSmallLetters(int n)
         {
             int codeN;
