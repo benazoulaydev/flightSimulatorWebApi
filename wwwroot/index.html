@@ -88,7 +88,7 @@
         function delete_flight(flight_id){
             if(flight_id === selectedId){
                 selectedId = undefined;
-                map.removeLayer(selected);
+                //map.removeLayer(selected);
                 map.removeLayer(oldLine);
             }
         }
@@ -121,6 +121,7 @@
         }
 
         function drawFlightPlanLine(flightPlan, id){
+            selectedId = id;
             if(typeof oldLine !== 'undefined'){
                 map.removeLayer(oldLine);
             }

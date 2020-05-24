@@ -1,6 +1,6 @@
 ﻿
 //call function 4 time per sec (every 250 milisec)
-setInterval(get_flight_time, 250);
+setInterval(get_flight_time, 1000);
 
 function get_flight_time() {
 
