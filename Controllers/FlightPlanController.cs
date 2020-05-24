@@ -10,7 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using System.Threading;
 using System.Threading.Tasks;
-
+using System.Net.Http;
+using Newtonsoft.Json;
 
 namespace flightSimulatorWebApi.Controllers
 {
@@ -21,6 +22,7 @@ namespace flightSimulatorWebApi.Controllers
         Mutex mut = new Mutex();
         Random rand = new Random();
         private IMemoryCache _cache;
+        private HttpClient _client;
 
         public FlightPlanController(IMemoryCache cache)
         {
@@ -67,7 +69,7 @@ namespace flightSimulatorWebApi.Controllers
         /*[Route("Flights?relative_to={date_time:DateTime}")]*/
         [HttpGet]
         [Route("Flights")]
-        public ActionResult<List<Flight>> GetFlightsByDate(DateTime relative_to)
+        public async Task<ActionResult<List<Flight>>> GetFlightsByDateAsync(DateTime relative_to)
         {
             List<Flight> flightList = new List<Flight>();
 
@@ -120,7 +122,31 @@ namespace flightSimulatorWebApi.Controllers
                     longitudeBefore = segment.longitude;
                 }
             }
+            //check from other servers
+            if (Request.QueryString.Value.Contains("sync_all"))
+            {
+                Dictionary<int, Servers> servers;
+                if (_cache.TryGetValue("servers", out servers))
+                {
+                    foreach (KeyValuePair<int, Servers> server in servers)
+                    {
+                        HttpResponseMessage response = await _client.GetAsync(server.Value.ServerURL + "/api/Flights?relative_to=" + relative_to.ToString("yyyy-MM-ddTHH:mm:ssZ"));
+                        response.EnsureSuccessStatusCode();
+                        var resp = await response.Content.ReadAsStringAsync();
 
+                        List<Flight> serverFlights = JsonConvert.DeserializeObject<List<Flight>>(resp);
+
+                        // change to external
+                        foreach (Flight flight in serverFlights)
+                        {
+                            flight.is_external = true;
+                        }
+
+                        //merg lists
+                        flightList = flightList.Concat(serverFlights).ToList();
+                    }
+                }
+            }
             if (flightList.Count == 0)
             {
                 return NotFound();
