@@ -1,6 +1,7 @@
 ﻿//import {get_flightplan} from "ajaxFlight.js"
 let oldPlaneIcons = [];
-let selectedId = -1;
+let selectedId;
+let selected;
 let oldLine;
 
 var blackIcon = L.icon({
@@ -20,24 +21,26 @@ function display_planes_icons(flights) {
     for(let oldIcon of oldPlaneIcons){
         map.removeLayer(oldIcon);
     }
-    let selected;
     let planeIcons = [];
     for (let i = 0; i < flights.length; i++) {
+        var x = flights[i].flight_id;
         if(flights[i].flight_id === selectedId){
             planeIcons[i] = L.marker([flights[i].latitude,flights[i].longitude], {icon: selectedIcon, id: flights[i].flight_id});
+            selected =planeIcons[i];
         } else{
             planeIcons[i] = L.marker([flights[i].latitude,flights[i].longitude], {icon: blackIcon, id: flights[i].flight_id});
         }
         planeIcons[i].on('click', function(e) {
             if (typeof selected !== 'undefined') {
-                selected.target.setIcon(blackIcon);
+                selected.setIcon(blackIcon);
             }
-            selected = e;
-            selectedId = this.id;
+            selected = e.target;
+            selectedId = e.target.options.id;
             e.target.setIcon(selectedIcon);
-            get_flightplan(this.id);
+            //get_flightplan(this.id);
         });
         map.addLayer(planeIcons[i]);
+        planeIcons[i]._icon.id = flights[i].flight_id;
     }
     oldPlaneIcons = planeIcons;
 }
