@@ -38,7 +38,7 @@ function display_flights(flights) {
     }
 }
 
-$('.file-upload').file_upload();
+// $('.file-upload').file_upload();
 
 function allowDrop(ev) {
     ev.preventDefault();
@@ -78,6 +78,7 @@ function chooseLine(id) {
 
 function deleteLine(id) {
     delete_flightplan(id);
+    delete_flight(id);
     document.getElementById("identifer").innerHTML = id + " has deleted";
     document.getElementById("startPosition").innerHTML = "";
     document.getElementById("endPosition").innerHTML = "";
