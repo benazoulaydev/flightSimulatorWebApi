@@ -8,8 +8,6 @@ using flightSimulatorWebApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Net.Http;
 using Newtonsoft.Json;
 
@@ -76,7 +74,7 @@ namespace flightSimulatorWebApi.Controllers
             Dictionary<string, FlightPlan> flightPlans;
             if (!_cache.TryGetValue("FlightPlans", out flightPlans))
             {
-                return NotFound();
+                return flightList;
             }
 
             foreach (KeyValuePair<string, FlightPlan> entry in flightPlans)
