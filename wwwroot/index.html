@@ -57,6 +57,7 @@
             </div>
         </div>
     </div>
+    <div id='alrt' class="alert alert-danger" style="opacity:0.0"></div>
     <script>
         var map = L.map('map').invalidateSize();
         L.tileLayer('https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=f8r453uR6vELlt49X1ng', {
@@ -85,27 +86,27 @@
             iconAnchor: [19, 38], // point of the icon which will correspond to marker's location
             popupAnchor: [0, -36] // point from which the popup should open relative to the iconAnchor
         });
-        function delete_flight(flight_id){
-            if(flight_id === selectedId){
+        function delete_flight(flight_id) {
+            if (flight_id === selectedId) {
                 selectedId = undefined;
                 //map.removeLayer(selected);
                 map.removeLayer(oldLine);
             }
         }
         function display_planes_icons(flights) {
-            for(let oldIcon of oldPlaneIcons){
+            for (let oldIcon of oldPlaneIcons) {
                 map.removeLayer(oldIcon);
             }
             let planeIcons = [];
             for (let i = 0; i < flights.length; i++) {
                 var x = flights[i].flight_id;
-                if(flights[i].flight_id === selectedId){
-                    planeIcons[i] = L.marker([flights[i].longitude,flights[i].latitude], {icon: selectedIcon, id: flights[i].flight_id});
-                    selected =planeIcons[i];
-                } else{
-                    planeIcons[i] = L.marker([flights[i].longitude,flights[i].latitude], {icon: blackIcon, id: flights[i].flight_id});
+                if (flights[i].flight_id === selectedId) {
+                    planeIcons[i] = L.marker([flights[i].longitude, flights[i].latitude], { icon: selectedIcon, id: flights[i].flight_id });
+                    selected = planeIcons[i];
+                } else {
+                    planeIcons[i] = L.marker([flights[i].longitude, flights[i].latitude], { icon: blackIcon, id: flights[i].flight_id });
                 }
-                planeIcons[i].on('click', function(e) {
+                planeIcons[i].on('click', function (e) {
                     if (typeof selected !== 'undefined') {
                         selected.setIcon(blackIcon);
                     }
@@ -120,20 +121,20 @@
             oldPlaneIcons = planeIcons;
         }
 
-        function drawFlightPlanLine(flightPlan, id){
+        function drawFlightPlanLine(flightPlan, id) {
             selectedId = id;
-            if(typeof oldLine !== 'undefined'){
+            if (typeof oldLine !== 'undefined') {
                 map.removeLayer(oldLine);
             }
             console.log(flightPlan);
             let line = [];
             line.push([flightPlan.initial_location.longitude, flightPlan.initial_location.latitude]);
-            for( let segment in flightPlan.segments){
-                line.push([flightPlan.segments[segment].longitude,flightPlan.segments[segment].latitude]);
+            for (let segment in flightPlan.segments) {
+                line.push([flightPlan.segments[segment].longitude, flightPlan.segments[segment].latitude]);
             }
             console.log(line);
             // create a red polyline from an array of LatLng points
-            let polyline = L.polyline(line, {color: 'red'});
+            let polyline = L.polyline(line, { color: 'red' });
             console.log(polyline);
             //console.log(polyline);
             polyline.addTo(map);
@@ -148,6 +149,6 @@
     <script src="js/site.js" asp-append-version="true"></script>
     <script src="js/ajaxFlight.js" asp-append-version="true"></script>
     <script src="js/flights_list.js"></script>
-    <script src="js/planeIcons.js"/>
+    <script src="js/planeIcons.js" />
 </body>
 </html>
