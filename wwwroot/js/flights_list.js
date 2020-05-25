@@ -63,7 +63,7 @@ function changeWhenDrag(ev) {
 }
 
 function drop(ev) {
-    var data = ev.dataTransfer.files[0];
+    var data = ev.dataTransfer.files[0]; 
     json_data = JSON.parse(JSON.stringify(data));
     changeFillBack(ev);
     post_flightplan(json_data);
