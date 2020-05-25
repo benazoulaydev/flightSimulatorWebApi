@@ -18,9 +18,11 @@ function get_flight_time() {
             // call function with parameter result
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
-            var flights = [];
-            display_flights(flights);
-            display_planes_icons(flights);
+            //document.getElementById('alrt').innerHTML = '<b>Error</b>' + textStatus;
+            //setTimeout(function () { document.getElementById('alrt').innerHTML = ''; }, 5000);
+            //var flights = [];
+            //display_flights(flights);
+            //display_planes_icons(flights);
         }
     });
 }
@@ -36,10 +38,12 @@ function get_flightplan(id) {
             setFlightPlanBox(result, id);
             drawFlightPlanLine(result, id);
         },
-        // error: function (XMLHttpRequest, textStatus, errorThrown) {
-        //     var flights = [];
-        //     display_flights(flights);
-        // }
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            let al = document.getElementById('alrt');
+            al.innerHTML = '<b>Error </b>' + XMLHttpRequest.responseJSON.status + ", " + XMLHttpRequest.responseJSON.title;
+            al.style.opacity = "1.0";
+            setTimeout(function () { document.getElementById('alrt').style.opacity = "0.0"; }, 5000);
+        }
     });
 }
 
@@ -51,6 +55,12 @@ function post_flightplan(flightPlan) {
         data: flightPlan,
         success: function (result) {
             // call function with parameter result
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            let al = document.getElementById('alrt');
+            al.innerHTML = '<b>Error </b>' + XMLHttpRequest.responseJSON.status + ", " + XMLHttpRequest.responseJSON.title;
+            al.style.opacity = "1.0";
+            setTimeout(function () { document.getElementById('alrt').style.opacity = "0.0"; }, 5000);
         }
     });
 }
@@ -61,6 +71,12 @@ function delete_flightplan(id) {
         url: "/api/Flights/" + id, // Using our resources.json file to serve results
         success: function (result) {
             // call function with no parameter
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            let al = document.getElementById('alrt');
+            al.innerHTML = '<b>Error </b>' + XMLHttpRequest.responseJSON.status + ", " + XMLHttpRequest.responseJSON.title;
+            al.style.opacity = "1.0";
+            setTimeout(function () { document.getElementById('alrt').style.opacity = "0.0"; }, 5000);
         }
     });
 }
