@@ -76,7 +76,7 @@ namespace flightSimulatorWebApi.Controllers
             Dictionary<string, FlightPlan> flightPlans;
             if (!_cache.TryGetValue("FlightPlans", out flightPlans))
             {
-                return flightList;//  NotFound();
+                return Ok(flightList);//  NotFound();
             }
 
             foreach (KeyValuePair<string, FlightPlan> entry in flightPlans)
@@ -151,7 +151,7 @@ namespace flightSimulatorWebApi.Controllers
             {
                 //return NotFound();
             }
-            return flightList;
+            return Ok(flightList);
         }
 
         [HttpDelete]
