@@ -89,7 +89,7 @@
         function delete_flight(flight_id) {
             if (flight_id === selectedId) {
                 selectedId = undefined;
-                //map.removeLayer(selected);
+                map.removeLayer(selected);
                 map.removeLayer(oldLine);
             }
         }
@@ -113,7 +113,8 @@
                     selected = e.target;
                     selectedId = e.target.options.id;
                     e.target.setIcon(selectedIcon);
-                    get_flightplan(selectedId);
+                    //get_flightplan(selectedId);
+                    chooseLine(selectedId);
                 });
                 map.addLayer(planeIcons[i]);
                 planeIcons[i].options.id = flights[i].flight_id;
@@ -149,6 +150,5 @@
     <script src="js/site.js" asp-append-version="true"></script>
     <script src="js/ajaxFlight.js" asp-append-version="true"></script>
     <script src="js/flights_list.js"></script>
-    <script src="js/planeIcons.js" />
 </body>
 </html>
