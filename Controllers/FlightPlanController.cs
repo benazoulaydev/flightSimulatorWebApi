@@ -61,7 +61,7 @@ namespace flightSimulatorWebApi.Controllers
             {
                 return NotFound();
             }
-            return flightPlan;
+            return Ok(flightPlan);
         }
 
         /*[Route("Flights?relative_to={date_time:DateTime}")]*/

@@ -18,6 +18,7 @@ namespace flightSimulatorWebApi
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+
         }
 
         public IConfiguration Configuration { get; }
@@ -61,6 +62,7 @@ namespace flightSimulatorWebApi
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
+
         }
     }
 }
