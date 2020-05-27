@@ -51,21 +51,63 @@ namespace flightSimulatorWebApi.Controllers
         }
         [HttpGet]
         [Route("FlightPlan/{id}")]
-        public ActionResult<FlightPlan> GetFlightPlanById(string id)
+        public async Task<ActionResult<FlightPlan>> GetFlightPlanById(string id)
         {
             Dictionary<string, FlightPlan> flightPlans;
             if (!_cache.TryGetValue("FlightPlans", out flightPlans))
             {
-                return NotFound();
+                Task<ActionResult<FlightPlan>> tmp = ServerIdFlightPlan(id);
+                try
+                {
+                    return await tmp;
+                }
+                catch (Exception e)
+                {
+                    return NotFound();
+                }
+
             }
             FlightPlan flightPlan;
             if (!flightPlans.TryGetValue(id, out flightPlan))
             {
+                Task<ActionResult<FlightPlan>> tmp = ServerIdFlightPlan(id);
+                try
+                {
+                    return await tmp;
+                }
+                catch (Exception e)
+                {
+                    return NotFound();
+                }
+
+            }
+            return Ok(flightPlan); ;
+        }
+        public async Task<ActionResult<FlightPlan>> ServerIdFlightPlan(string id)
+        {
+            Dictionary<string, Servers> servers;
+            if (_cache.TryGetValue("servers", out servers))
+            {
+                foreach (KeyValuePair<string, Servers> server in servers)
+                {
+                    HttpResponseMessage response = await _client.GetAsync(server.Value.ServerURL + "/api/FlightPlan/" + id);
+                    response.EnsureSuccessStatusCode();
+                    var resp = await response.Content.ReadAsStringAsync();
+
+                    FlightPlan serverflightPlan = JsonConvert.DeserializeObject<FlightPlan>(resp);
+
+                    return Ok(serverflightPlan);
+
+
+
+                }
+            }
+            else
+            {
                 return NotFound();
             }
-            return flightPlan;
+            return NotFound();
         }
-
         /*[Route("Flights?relative_to={date_time:DateTime}")]*/
         [HttpGet]
         [Route("Flights")]
@@ -125,10 +167,10 @@ namespace flightSimulatorWebApi.Controllers
             //check from other servers
             if (Request.QueryString.Value.Contains("sync_all"))
             {
-                Dictionary<int, Servers> servers;
+                Dictionary<string, Servers> servers;
                 if (_cache.TryGetValue("servers", out servers))
                 {
-                    foreach (KeyValuePair<int, Servers> server in servers)
+                    foreach (KeyValuePair<string, Servers> server in servers)
                     {
                         HttpResponseMessage response = await _client.GetAsync(server.Value.ServerURL + "/api/Flights?relative_to=" + relative_to.ToString("yyyy-MM-ddTHH:mm:ssZ"));
                         response.EnsureSuccessStatusCode();
