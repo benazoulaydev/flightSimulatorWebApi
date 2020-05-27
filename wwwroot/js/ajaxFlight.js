@@ -12,15 +12,15 @@ function get_flight_time() {
     if (today.getSeconds() < 10) { var sec = "0" + today.getSeconds(); } else { var sec = today.getSeconds(); }
     var time = today.getFullYear() + "-" + mounth + "-" + day + "T" + hour + ":" + min + ":" + sec;
 
-
+    console.log(time);
     $.ajax({
         type: "GET",
         url: "/api/Flights?relative_to=" + time + "&sync_all", // Using our resources.json file to serve results
         dataType: 'json',
         success: function (result) {
-            if (!dropFlag) {
-                display_flights(result);
-            }
+
+            display_flights(result);
+
             display_planes_icons(result);
             // call function with parameter result
         },
