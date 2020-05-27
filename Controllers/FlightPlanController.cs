@@ -8,6 +8,8 @@ using flightSimulatorWebApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Net.Http;
 using Newtonsoft.Json;
 
@@ -23,12 +25,12 @@ namespace flightSimulatorWebApi.Controllers
         private HttpClient _client;
 
         // get cache shared memory
-        public FlightPlanController(IMemoryCache cache)
+        public FlightPlanController(IMemoryCache cache, IHttpClientFactory factory)
         {
             _cache = cache;
+            _client = factory.CreateClient("api");
         }
 
-        // api/FlightPlan + {json file}
         [HttpPost]
         [Route("FlightPlan")]
         public ActionResult<FlightPlan> AddFlightPlan(FlightPlan infos)
@@ -49,28 +51,68 @@ namespace flightSimulatorWebApi.Controllers
             flightPlans.Add(flightPlanID, infos);
             return Ok(infos);
         }
-
-        // api/FlightPlan/{id}
         [HttpGet]
         [Route("FlightPlan/{id}")]
-        public ActionResult<FlightPlan> GetFlightPlanById(string id)
+        public async Task<ActionResult<FlightPlan>> GetFlightPlanById(string id)
         {
             Dictionary<string, FlightPlan> flightPlans;
             // check if there any flightPlan has added ever
             if (!_cache.TryGetValue("FlightPlans", out flightPlans))
             {
-                return NotFound();
+                Task<ActionResult<FlightPlan>> tmp = ServerIdFlightPlan(id);
+                try
+                {
+                    return await tmp;
+                }
+                catch (Exception e)
+                {
+                    return NotFound();
+                }
+
             }
             FlightPlan flightPlan;
             // extract the FlightPlan object which asked for
             if (!flightPlans.TryGetValue(id, out flightPlan))
             {
+                Task<ActionResult<FlightPlan>> tmp = ServerIdFlightPlan(id);
+                try
+                {
+                    return await tmp;
+                }
+                catch (Exception e)
+                {
+                    return NotFound();
+                }
+
+            }
+            return Ok(flightPlan); ;
+        }
+        public async Task<ActionResult<FlightPlan>> ServerIdFlightPlan(string id)
+        {
+            Dictionary<string, Servers> servers;
+            if (_cache.TryGetValue("servers", out servers))
+            {
+                foreach (KeyValuePair<string, Servers> server in servers)
+                {
+                    HttpResponseMessage response = await _client.GetAsync(server.Value.ServerURL + "/api/FlightPlan/" + id);
+                    response.EnsureSuccessStatusCode();
+                    var resp = await response.Content.ReadAsStringAsync();
+
+                    FlightPlan serverflightPlan = JsonConvert.DeserializeObject<FlightPlan>(resp);
+
+                    return Ok(serverflightPlan);
+
+
+
+                }
+            }
+            else
+            {
                 return NotFound();
             }
-            return Ok(flightPlan);
+            return NotFound();
         }
-
-        // api/Flights?relative_to={date_time:DateTime}&sync_all
+        /*[Route("Flights?relative_to={date_time:DateTime}")]*/
         [HttpGet]
         [Route("Flights")]
         public async Task<ActionResult<List<Flight>>> GetFlightsByDateAsync(DateTime relative_to)
@@ -130,25 +172,34 @@ namespace flightSimulatorWebApi.Controllers
             //check from other servers
             if (Request.QueryString.Value.Contains("sync_all"))
             {
-                Dictionary<int, Servers> servers;
+                Dictionary<string, Servers> servers;
                 if (_cache.TryGetValue("servers", out servers))
                 {
-                    foreach (KeyValuePair<int, Servers> server in servers)
+                    foreach (KeyValuePair<string, Servers> server in servers)
                     {
-                        HttpResponseMessage response = await _client.GetAsync(server.Value.ServerURL + "/api/Flights?relative_to=" + relative_to.ToString("yyyy-MM-ddTHH:mm:ssZ"));
-                        response.EnsureSuccessStatusCode();
-                        var resp = await response.Content.ReadAsStringAsync();
-
-                        List<Flight> serverFlights = JsonConvert.DeserializeObject<List<Flight>>(resp);
-
-                        // change to external
-                        foreach (Flight flight in serverFlights)
+                        try
                         {
-                            flight.is_external = true;
+                            HttpResponseMessage response = await _client.GetAsync(server.Value.ServerURL + "/api/Flights?relative_to=" + relative_to.ToString("yyyy-MM-ddTHH:mm:ssZ"));
+                            response.EnsureSuccessStatusCode();
+                            var resp = await response.Content.ReadAsStringAsync();
+
+                            List<Flight> serverFlights = JsonConvert.DeserializeObject<List<Flight>>(resp);
+
+                            // change to external
+                            foreach (Flight flight in serverFlights)
+                            {
+                                flight.is_external = true;
+                            }
+
+                            //merg lists
+                            flightList = flightList.Concat(serverFlights).ToList();
+                        }
+                        catch (NullReferenceException e)
+                        {
+                            break;
                         }
 
-                        //merg lists
-                        flightList = flightList.Concat(serverFlights).ToList();
+
                     }
                 }
             }
