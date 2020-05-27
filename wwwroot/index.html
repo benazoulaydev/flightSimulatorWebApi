@@ -7,8 +7,7 @@
     <link rel="stylesheet" href="css/flight_list.css" />
     <script src="lib/leaflet/leaflet.js"></script>
     <style>
-
-    </style> 
+    </style>
 </head>
 <body>
     <div class="container" ondragleave="changeFillBack(event)" ondragenter="changeFill(event)">
@@ -40,20 +39,13 @@
                 <br />
                 <h5 class="mb-0 text-center" id="head_line">Flights</h5>
                 <br />
-                <div id="beforeFill">
-                    <div class="list-group overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light" style="max-width: 300px; max-height: 580px;" id="internal_flights" role="tablist">
+                <div id="fill">
+                    <div id="internal_flights" class="list-group overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light" style="max-width: 300px; max-height: 580px;" role="tablist">
                         <script src="../js/flights_list.js"></script>
                     </div>
+                    <br /><br />
+                    <input type="file" id="upLoad" onchange="drop(event)" name="myfile">
                 </div>
-                <!--<label onclick="chooseLine(this.id)"></label>-->
-                <!--<label for="fileInput" id="dropLabel"
-                       ondrop="drop(event);changeFillBack(event)"
-                       ondragover="changeWhenDrag(event)"
-                       ondragenter="changeWhenDrag(event)"
-                       ondragleave="changeWhenDrag(event)">
-                    <img id="arrow" src="images/Arrrow.png" /><br />
-                    Drag the 'Flight Plan'
-                </label>-->
             </div>
         </div>
     </div>
@@ -66,7 +58,7 @@
         let x = 0;
         setTimeout(function () { map.invalidateSize(); map.setView([5, -20], 3); }, 1000)
 
-        
+
 
 
         //import {get_flightplan} from "ajaxFlight.js"
@@ -90,6 +82,7 @@
 
         map.on('click', function (e) {
             chosenID = null;
+            resetBox();
             selectedId = undefined;
             map.removeLayer(oldLine);
         });
