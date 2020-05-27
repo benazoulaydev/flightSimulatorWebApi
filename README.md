@@ -1,4 +1,4 @@
-# flightSimulatorWebApi
+# Flight Simulator Web Api
 
 Created by [KfirYehuda](https://github.com/kfiryehuda), [stavih19](https://github.com/stavih19) and
  [BenAzoulayDev](https://github.com/benazoulaydev)
