@@ -1,2 +1,0 @@
-﻿var tableHtml = "<a class='list-group-item list-group-item-action active' id='hgfh' data-toggle='list' href='#list-home' role='tab' aria-controls='home'>Home</a>";
-document.getElementById("list-tab").innerHTML = tableHtml;
