@@ -32,46 +32,33 @@ function display_flights(flights) {
                 "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
                 "</a >";
         }
-        document.getElementById("internal_flights").innerHTML = tableHtml;
-        document.getElementById("internal_flights").innerHTML = tableHtml;
     }
+    document.getElementById("internal_flights").innerHTML = tableHtml;
     if (chosenID !== null) {
         console.log("kfir2" + chosenID);
         document.getElementById(chosenID).style.backgroundColor = "powderblue";
     }
 }
 
-// $('.file-upload').file_upload();
+function upload(ev) {
+    var element = document.getElementById("upLoad");
+    var jsonfile;
+    if (element.files.length > 0) {
+        jsonfile = element.files[0];
+    }
 
-function allowDrop(ev) {
-    ev.preventDefault();
-}
+    var text;
 
-function changeFillBack(ev) {
-    document.getElementById("afterFill").innerHTML = '<div class="list-group overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light" style="max-width: 300px; max-height: 580px;" id="internal_flights" role="tablist"></div>';
-    var newScript = document.createElement("script");
-    newScript.src = "../js/flights_list.js";
-    document.getElementById("afterFill").appendChild(newScript);
-    document.getElementById("afterFill").id = "beforeFill";
-}
+    var reader = new FileReader();
+    reader.onload = (function (data) {
+        return function (e) {
+            text = JSON.parse(e.target.result);
+            text = JSON.stringify(text);
+            post_flightplan(text);
+        }
+    })(jsonfile);
 
-function changeFill(ev) {
-    document.getElementById("beforeFill").innerHTML = '<label for="fileInput" id="dropLabel" ondrop="drop(event); changeFillBack(event)" ondragover="changeWhenDrag(event)" ondragenter="changeWhenDrag(event)" ondragleave="changeWhenDrag(event)" ><img id="arrow" src="images/Arrrow.png" /><br />Drag the "Flight Plan"</label>';
-    document.getElementById("beforeFill").id = "afterFill";
-}
-
-function changeWhenDrag(ev) {
-    ev.preventDefault();
-    ev.stopPropagation();
-}
-
-function drop(ev) {
-    var data = ev.dataTransfer.files[0];
-    json_data = JSON.parse(JSON.stringify(data));
-    changeFillBack(ev);
-    post_flightplan(json_data);
-
-    ev.preventDefault();
+    reader.readAsText(jsonfile);
 }
 
 function chooseLine(id) {
@@ -98,6 +85,12 @@ function deleteLine(id) {
     document.getElementById("endPosition").innerHTML = "";
 }
 
+function resetBox() {
+    document.getElementById("identifer").innerHTML = "";
+    document.getElementById("startPosition").innerHTML = "";
+    document.getElementById("endPosition").innerHTML = "";
+}
+
 function setFlightPlanBox(flightPlan, id) {
     var long = flightPlan.initial_location.longitude.toString().substring(0, 5);
     var lati = flightPlan.initial_location.latitude.toString().substring(0, 5);
@@ -111,7 +104,6 @@ function setFlightPlanBox(flightPlan, id) {
     }
     var endLongitude = flightPlan.segments[flightPlan.segments.length - 1].longitude.toString().substring(0, 5);
     var endLatitude = flightPlan.segments[flightPlan.segments.length - 1].latitude.toString().substring(0, 5);
-    //var endTimeFormat = endTime.getUTCFullYear() + "-" + (endTime.getUTCMonth() + 1) + "-" + endTime.getDate() + "T" + endTime.getUTCHours() + ":" + endTime.getMinutes() + ":" + endTime.getSeconds();
     var endTimeFormat = endTime.getFullYear() + "-" + (endTime.getMonth() + 1) + "-" + endTime.getDate() + "T" + endTime.getHours() + ":" + endTime.getMinutes() + ":" + endTime.getSeconds();
     document.getElementById("endPosition").innerHTML = "Ending at " + endTimeFormat + " in (" + endLongitude + ", " + endLatitude + ")";
 }
