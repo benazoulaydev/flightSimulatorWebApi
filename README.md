@@ -92,7 +92,7 @@ ASP.NET Core 3.1 WebAPI
 
 ## Resources:
 
-Will Add in the future...
+Will be Added in the future...
 
 
 ## Contributing
