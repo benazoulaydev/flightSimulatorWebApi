@@ -1,4 +1,5 @@
-﻿var chosenID = "";
+﻿var chosenID = null;
+var prevDeleted = null;
 
 function display_flights(flights) {
     tableHtml = "";
@@ -34,8 +35,8 @@ function display_flights(flights) {
         document.getElementById("internal_flights").innerHTML = tableHtml;
         document.getElementById("internal_flights").innerHTML = tableHtml;
     }
-
-    if (chosenID != "") {
+    if (chosenID !== null) {
+        console.log("kfir2" + chosenID);
         document.getElementById(chosenID).style.backgroundColor = "powderblue";
     }
 }
@@ -74,11 +75,21 @@ function drop(ev) {
 }
 
 function chooseLine(id) {
+    if (chosenID !== null) {
+        document.getElementById(chosenID).style.backgroundColor = "powderblue";
+    }
     chosenID = id;
     get_flightplan(id);
 }
 
 function deleteLine(id) {
+    if (prevDeleted === id) {
+        return;
+    }
+    prevDeleted = id;
+    if (id === chosenID) {
+        chosenID = null;
+    }
     delete_flightplan(id);
     delete_flight(id);
 

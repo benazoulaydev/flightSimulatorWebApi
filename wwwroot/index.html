@@ -66,6 +66,7 @@
         let x = 0;
         setTimeout(function () { map.invalidateSize(); map.setView([5, -20], 3); }, 1000)
 
+        
 
 
         //import {get_flightplan} from "ajaxFlight.js"
@@ -86,10 +87,17 @@
             iconAnchor: [19, 38], // point of the icon which will correspond to marker's location
             popupAnchor: [0, -36] // point from which the popup should open relative to the iconAnchor
         });
+
+        map.on('click', function (e) {
+            chosenID = null;
+            selectedId = undefined;
+            map.removeLayer(oldLine);
+        });
+
         function delete_flight(flight_id) {
             if (flight_id === selectedId) {
                 selectedId = undefined;
-                //map.removeLayer(selected);
+                map.removeLayer(selected);
                 map.removeLayer(oldLine);
             }
         }
@@ -113,7 +121,8 @@
                     selected = e.target;
                     selectedId = e.target.options.id;
                     e.target.setIcon(selectedIcon);
-                    get_flightplan(selectedId);
+                    //get_flightplan(selectedId);
+                    chooseLine(selectedId);
                 });
                 map.addLayer(planeIcons[i]);
                 planeIcons[i].options.id = flights[i].flight_id;
@@ -149,6 +158,5 @@
     <script src="js/site.js" asp-append-version="true"></script>
     <script src="js/ajaxFlight.js" asp-append-version="true"></script>
     <script src="js/flights_list.js"></script>
-    <script src="js/planeIcons.js" />
 </body>
 </html>

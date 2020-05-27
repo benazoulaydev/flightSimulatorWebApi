@@ -152,7 +152,6 @@ namespace flightSimulatorWebApi.Controllers
                     }
                 }
             }
-
             return Ok(flightList);
         }
 
