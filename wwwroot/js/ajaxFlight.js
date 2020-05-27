@@ -4,9 +4,16 @@ setInterval(get_flight_time, 1000);
 
 function get_flight_time() {
 
-    var today = new Date().toISOString();
-    var time = today.substring(0, today.length - 5);
+    var today = new Date();
+    if ((today.getMonth() + 1) < 10) { var mounth = "0" + (today.getMonth() + 1); } else { var mounth = (today.getMonth() + 1); }
+    if (today.getDate() < 10) { var day = "0" + today.getDate(); } else { var day = today.getDate(); }
+    if (today.getHours() < 10) { var hour = "0" + today.getHours(); } else { var hour = today.getHours(); }
+    if (today.getMinutes() < 10) { var min = "0" + today.getMinutes(); } else { var min = today.getMinutes(); }
+    if (today.getSeconds() < 10) { var sec = "0" + today.getSeconds(); } else { var sec = today.getSeconds(); }
+    var time = today.getFullYear() + "-" + mounth + "-" + day + "T" + hour + ":" + min + ":" + sec;
 
+    //var today2 = new Date().toISOString();
+    //var time2 = today2.substring(0, today2.length - 5);
 
     $.ajax({
         type: "GET",

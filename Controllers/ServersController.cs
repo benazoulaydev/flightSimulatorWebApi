@@ -15,12 +15,12 @@ namespace flightSimulatorWebApi.Controllers
     public class ServersController : ControllerBase
     {
         private IMemoryCache _cache;
-        private HttpClient _client;
+        //private HttpClient _client;
 
-        public ServersController(IMemoryCache cache, IHttpClientFactory factory)
+        public ServersController(IMemoryCache cache)//, IHttpClientFactory factory)
         {
             _cache = cache;
-            _client = factory.CreateClient("api");
+            //_client = factory.CreateClient("api");
         }
 
         [HttpPost]
