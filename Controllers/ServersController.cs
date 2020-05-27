@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using flightSimulatorWebApi.Models;
+using FlightSimulatorWebApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace flightSimulatorWebApi.Controllers
+namespace FlightSimulatorWebApi.Controllers
 {
     [Route("api/")]
     [ApiController]

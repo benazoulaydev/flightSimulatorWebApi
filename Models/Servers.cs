@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace flightSimulatorWebApi.Models
+namespace FlightSimulatorWebApi.Models
 {
     public class Servers
     {
