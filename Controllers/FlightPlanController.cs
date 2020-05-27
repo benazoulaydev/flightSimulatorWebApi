@@ -22,11 +22,13 @@ namespace flightSimulatorWebApi.Controllers
         private IMemoryCache _cache;
         private HttpClient _client;
 
+        // get cache shared memory
         public FlightPlanController(IMemoryCache cache)
         {
             _cache = cache;
         }
 
+        // api/FlightPlan + {json file}
         [HttpPost]
         [Route("FlightPlan")]
         public ActionResult<FlightPlan> AddFlightPlan(FlightPlan infos)
@@ -39,7 +41,7 @@ namespace flightSimulatorWebApi.Controllers
                 flightPlans = new Dictionary<string, FlightPlan>();
                 _cache.Set("FlightPlans", flightPlans);
             }
-            //add anyway to cache
+            //add anyway to cache and pik uniq id for it
             do
             {
                 flightPlanID = GetFlightID();
@@ -47,16 +49,20 @@ namespace flightSimulatorWebApi.Controllers
             flightPlans.Add(flightPlanID, infos);
             return Ok(infos);
         }
+
+        // api/FlightPlan/{id}
         [HttpGet]
         [Route("FlightPlan/{id}")]
         public ActionResult<FlightPlan> GetFlightPlanById(string id)
         {
             Dictionary<string, FlightPlan> flightPlans;
+            // check if there any flightPlan has added ever
             if (!_cache.TryGetValue("FlightPlans", out flightPlans))
             {
                 return NotFound();
             }
             FlightPlan flightPlan;
+            // extract the FlightPlan object which asked for
             if (!flightPlans.TryGetValue(id, out flightPlan))
             {
                 return NotFound();
@@ -64,19 +70,20 @@ namespace flightSimulatorWebApi.Controllers
             return Ok(flightPlan);
         }
 
-        /*[Route("Flights?relative_to={date_time:DateTime}")]*/
+        // api/Flights?relative_to={date_time:DateTime}&sync_all
         [HttpGet]
         [Route("Flights")]
         public async Task<ActionResult<List<Flight>>> GetFlightsByDateAsync(DateTime relative_to)
         {
             List<Flight> flightList = new List<Flight>();
-
             Dictionary<string, FlightPlan> flightPlans;
+            // check if there any flight at all
             if (!_cache.TryGetValue("FlightPlans", out flightPlans))
             {
-                return flightList;
+                return Ok(flightList); // return empty list
             }
 
+            // going throw each flight
             foreach (KeyValuePair<string, FlightPlan> entry in flightPlans)
             {
                 DateTime entryKeyTimeAfter = entry.Value.initial_location.date_time;
@@ -145,11 +152,8 @@ namespace flightSimulatorWebApi.Controllers
                     }
                 }
             }
-            if (flightList.Count == 0)
-            {
-                return NotFound();
-            }
-            return flightList;
+
+            return Ok(flightList);
         }
 
         [HttpDelete]

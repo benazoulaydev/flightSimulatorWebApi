@@ -9,7 +9,7 @@ function display_flights(flights) {
             var lati = flights[i].latitude.toString().substring(0, 5);
             tableHtml += "<a id='" + flights[i].flight_id + "' href='#' onclick='chooseLine(this.id)' class='list-group-item list-group-item-action flex-column align-items-start'>" +
                 "<div class='d-flex w-100 justify-content-between' >" +
-                "<h5 class='mb-1'>" + flights[i].company_name + " " + flights[i].date_time + "</h5>" +
+                "<h5 class='mb-1'>" + flights[i].flight_id + "   " + flights[i].company_name + "</h5>" +
                 "</div >" +
                 "<small>(" + long + ", " + lati + ")</small>" +
                 "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
@@ -25,11 +25,13 @@ function display_flights(flights) {
             var lati = flights[i].latitude.toString().substring(0, 5);
             tableHtml += "<a id='" + flights[i].flight_id + "' href='#' onclick='chooseLine(this.id)' class='list-group-item list-group-item-action flex-column align-items-start'>" +
                 "<div class='d-flex w-100 justify-content-between' >" +
-                "<h5 class='mb-1'>" + flights[i].company_name + " " + flights[i].date_time + "</h5>" +
+                "<h5 class='mb-1'>" + flights[i].flight_id + "   " + flights[i].company_name + "</h5>" +
                 "</div >" +
                 "<small>(" + long + ", " + lati + ")</small>" +
+                "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
                 "</a >";
         }
+        document.getElementById("internal_flights").innerHTML = tableHtml;
         document.getElementById("internal_flights").innerHTML = tableHtml;
     }
 
@@ -79,6 +81,7 @@ function chooseLine(id) {
 function deleteLine(id) {
     delete_flightplan(id);
     delete_flight(id);
+
     document.getElementById("identifer").innerHTML = id + " has deleted";
     document.getElementById("startPosition").innerHTML = "";
     document.getElementById("endPosition").innerHTML = "";
@@ -97,6 +100,7 @@ function setFlightPlanBox(flightPlan, id) {
     }
     var endLongitude = flightPlan.segments[flightPlan.segments.length - 1].longitude.toString().substring(0, 5);
     var endLatitude = flightPlan.segments[flightPlan.segments.length - 1].latitude.toString().substring(0, 5);
-    var endTimeFormat = endTime.getUTCFullYear() + "-" + (endTime.getUTCMonth() + 1) + "-" + endTime.getDate() + "T" + endTime.getUTCHours() + ":" + endTime.getMinutes() + ":" + endTime.getSeconds();
+    //var endTimeFormat = endTime.getUTCFullYear() + "-" + (endTime.getUTCMonth() + 1) + "-" + endTime.getDate() + "T" + endTime.getUTCHours() + ":" + endTime.getMinutes() + ":" + endTime.getSeconds();
+    var endTimeFormat = endTime.getFullYear() + "-" + (endTime.getMonth() + 1) + "-" + endTime.getDate() + "T" + endTime.getHours() + ":" + endTime.getMinutes() + ":" + endTime.getSeconds();
     document.getElementById("endPosition").innerHTML = "Ending at " + endTimeFormat + " in (" + endLongitude + ", " + endLatitude + ")";
 }
