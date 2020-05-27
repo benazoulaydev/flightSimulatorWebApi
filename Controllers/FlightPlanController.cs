@@ -80,7 +80,7 @@ namespace FlightSimulatorWebApi.Controllers
                 flightPlanID = GetFlightID();
             } while (flightPlans.ContainsKey(flightPlanID));
             flightPlans.Add(flightPlanID, info);
-            return Ok(info);
+            return info;
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace FlightSimulatorWebApi.Controllers
                 }
 
             }
-            return Ok(flightPlan); ;
+            return flightPlan; ;
         }
 
         /// <summary>
@@ -143,10 +143,7 @@ namespace FlightSimulatorWebApi.Controllers
 
                     FlightPlan serverflightPlan = JsonConvert.DeserializeObject<FlightPlan>(resp);
 
-                    return Ok(serverflightPlan);
-
-
-
+                    return serverflightPlan;
                 }
             }
             else
@@ -232,7 +229,7 @@ namespace FlightSimulatorWebApi.Controllers
             // check if there any flight at all
             if (!cache.TryGetValue("FlightPlans", out flightPlans))
             {
-                return Ok(flightList); // return empty list
+                return flightList; // return empty list
             }
 
             // going throw each flight
@@ -244,7 +241,7 @@ namespace FlightSimulatorWebApi.Controllers
             Dictionary<string, Servers> servers;
             if (!Request.QueryString.Value.Contains("sync_all") || !cache.TryGetValue("servers", out servers))
             {
-                return Ok(flightList);
+                return flightList;
             }
             foreach (KeyValuePair<string, Servers> server in servers)
             {
@@ -264,7 +261,7 @@ namespace FlightSimulatorWebApi.Controllers
                     break;
                 }
             }
-            return Ok(flightList);
+            return flightList;
         }
 
 

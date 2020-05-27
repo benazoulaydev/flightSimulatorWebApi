@@ -39,7 +39,7 @@ namespace FlightSimulatorWebApi.Controllers
             }
             //add anyway to cache
             servers.Add(infos.ServerId, infos);
-            return Ok(infos);
+            return infos;
         }
 
         [HttpGet]
