@@ -7,7 +7,7 @@ function get_flight_time() {
     var today = new Date().toISOString();
     var time = today.substring(0, today.length - 5);
 
-
+    console.log(time);
     $.ajax({
         type: "GET",
         url: "/api/Flights?relative_to=" + time + "&sync_all", // Using our resources.json file to serve results

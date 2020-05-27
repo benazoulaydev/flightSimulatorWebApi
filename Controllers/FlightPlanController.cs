@@ -24,9 +24,10 @@ namespace flightSimulatorWebApi.Controllers
         private IMemoryCache _cache;
         private HttpClient _client;
 
-        public FlightPlanController(IMemoryCache cache)
+        public FlightPlanController(IMemoryCache cache, IHttpClientFactory factory)
         {
             _cache = cache;
+            _client = factory.CreateClient("api");
         }
 
         [HttpPost]
@@ -172,20 +173,29 @@ namespace flightSimulatorWebApi.Controllers
                 {
                     foreach (KeyValuePair<string, Servers> server in servers)
                     {
-                        HttpResponseMessage response = await _client.GetAsync(server.Value.ServerURL + "/api/Flights?relative_to=" + relative_to.ToString("yyyy-MM-ddTHH:mm:ssZ"));
-                        response.EnsureSuccessStatusCode();
-                        var resp = await response.Content.ReadAsStringAsync();
-
-                        List<Flight> serverFlights = JsonConvert.DeserializeObject<List<Flight>>(resp);
-
-                        // change to external
-                        foreach (Flight flight in serverFlights)
+                        try
                         {
-                            flight.is_external = true;
+                            HttpResponseMessage response = await _client.GetAsync(server.Value.ServerURL + "/api/Flights?relative_to=" + relative_to.ToString("yyyy-MM-ddTHH:mm:ssZ"));
+                            response.EnsureSuccessStatusCode();
+                            var resp = await response.Content.ReadAsStringAsync();
+
+                            List<Flight> serverFlights = JsonConvert.DeserializeObject<List<Flight>>(resp);
+
+                            // change to external
+                            foreach (Flight flight in serverFlights)
+                            {
+                                flight.is_external = true;
+                            }
+
+                            //merg lists
+                            flightList = flightList.Concat(serverFlights).ToList();
+                        }
+                        catch (NullReferenceException e)
+                        {
+                            break;
                         }
 
-                        //merg lists
-                        flightList = flightList.Concat(serverFlights).ToList();
+
                     }
                 }
             }
