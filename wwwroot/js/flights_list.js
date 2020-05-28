@@ -95,7 +95,7 @@ function setFlightPlanBox(flightPlan, id) {
     var long = flightPlan.initial_location.longitude.toString().substring(0, 5);
     var lati = flightPlan.initial_location.latitude.toString().substring(0, 5);
 
-    document.getElementById("identifer").innerHTML = id + " for " + flightPlan.company_name;
+    document.getElementById("identifer").innerHTML = id + " for " + flightPlan.company_name+" company";
     document.getElementById("startPosition").innerHTML = "Begining at " + flightPlan.initial_location.date_time + " in (" +
         long + ", " + lati + ")";
     var endTime = new Date(flightPlan.initial_location.date_time);

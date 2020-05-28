@@ -8,21 +8,38 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 
+/// <summary>
+/// 
+/// </summary>
 namespace FlightSimulatorWebApi.Controllers
 {
+    /// <summary>
+    /// api servers controllers
+    /// </summary>
+    /// <seealso cref="Microsoft.AspNetCore.Mvc.ControllerBase" />
     [Route("api/")]
     [ApiController]
     public class ServersController : ControllerBase
     {
+        /// <summary>
+        /// The cache memory of the api
+        /// </summary>
         private IMemoryCache _cache;
-        //private HttpClient _client;
 
-        public ServersController(IMemoryCache cache)//, IHttpClientFactory factory)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ServersController"/> class.
+        /// </summary>
+        /// <param name="cache">The cache.</param>
+        public ServersController(IMemoryCache cache)
         {
             _cache = cache;
-            //_client = factory.CreateClient("api");
         }
 
+        /// <summary>
+        /// Adds the server.
+        /// </summary>
+        /// <param name="infos">The infos.</param>
+        /// <returns></returns>
         [HttpPost]
         [Route("servers")]
         public ActionResult<Servers> AddServer(Servers infos)
@@ -42,6 +59,10 @@ namespace FlightSimulatorWebApi.Controllers
             return infos;
         }
 
+        /// <summary>
+        /// Gets the servers.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("servers")]
         public ActionResult<List<Servers>> GetServers()
@@ -54,9 +75,13 @@ namespace FlightSimulatorWebApi.Controllers
             return servers.Values.ToList();
         }
 
-
+        /// <summary>
+        /// Deletes the server by identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns></returns>
         [HttpDelete]
-        [Route("servers/{id:int}")]
+        [Route("servers/{id}")]
         public ActionResult<Servers> DeleteServerById(string id)
         {
             Dictionary<string, Servers> servers;
@@ -72,6 +97,5 @@ namespace FlightSimulatorWebApi.Controllers
             servers.Remove(id);
             return server;
         }
-
     }
 }
