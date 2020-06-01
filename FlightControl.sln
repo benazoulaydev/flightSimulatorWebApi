@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29911.84
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlightControlWeb", "FlightControlWeb.csproj", "{A8DA482B-B6E5-4C2C-AF36-1F1ABE5D5D88}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestProject1", "..\UnitTestProject1\UnitTestProject1.csproj", "{81E6D685-0146-4D31-963F-643A076990A3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "..\UnitTest\UnitTest.csproj", "{E51ACD72-7FC1-4EBB-965D-D8DA8352DFE9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{A8DA482B-B6E5-4C2C-AF36-1F1ABE5D5D88}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8DA482B-B6E5-4C2C-AF36-1F1ABE5D5D88}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8DA482B-B6E5-4C2C-AF36-1F1ABE5D5D88}.Release|Any CPU.Build.0 = Release|Any CPU
-		{81E6D685-0146-4D31-963F-643A076990A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{81E6D685-0146-4D31-963F-643A076990A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{81E6D685-0146-4D31-963F-643A076990A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{81E6D685-0146-4D31-963F-643A076990A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E51ACD72-7FC1-4EBB-965D-D8DA8352DFE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E51ACD72-7FC1-4EBB-965D-D8DA8352DFE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E51ACD72-7FC1-4EBB-965D-D8DA8352DFE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E51ACD72-7FC1-4EBB-965D-D8DA8352DFE9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
