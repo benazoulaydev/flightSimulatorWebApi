@@ -15,6 +15,5 @@ namespace FlightSimulatorWebApi.Models
 
         public List<Segments> segments { get; set; }
 
-        public int Id { get; set; }
     }
 }
