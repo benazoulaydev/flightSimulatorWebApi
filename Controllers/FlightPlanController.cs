@@ -120,8 +120,9 @@ namespace FlightSimulatorWebApi.Controllers
                 {
                     return NotFound();
                 }
+
             }
-            return flightPlan;
+            return flightPlan; ;
         }
 
         /// <summary>
@@ -136,13 +137,17 @@ namespace FlightSimulatorWebApi.Controllers
             {
                 foreach (KeyValuePair<string, Servers> server in servers)
                 {
-                    HttpResponseMessage response = await client.GetAsync(server.Value.ServerURL + "/api/FlightPlan/" + id);
+                    HttpResponseMessage response = await client.GetAsync(server.Value.ServerURL +
+                        "/api/FlightPlan/" + id);
                     response.EnsureSuccessStatusCode();
                     var resp = await response.Content.ReadAsStringAsync();
 
                     FlightPlan serverflightPlan = JsonConvert.DeserializeObject<FlightPlan>(resp);
 
                     return serverflightPlan;
+
+
+
                 }
             }
             else
@@ -158,7 +163,8 @@ namespace FlightSimulatorWebApi.Controllers
         /// <param name="entry">The entry.</param>
         /// <param name="flightList">The flight list.</param>
         /// <param name="relativeTo">The relative to.</param>
-        private void AddToFlightListIfShould(KeyValuePair<string, FlightPlan> entry, List<Flight> flightList, DateTime relativeTo)
+        private void AddToFlightListIfShould(KeyValuePair<string, FlightPlan> entry,
+            List<Flight> flightList, DateTime relativeTo)
         {
             DateTime entryKeyTimeAfter = entry.Value.initial_location.date_time;
             DateTime entryKeyTimeBefore = entry.Value.initial_location.date_time;
@@ -221,8 +227,10 @@ namespace FlightSimulatorWebApi.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("Flights")]
-        public async Task<ActionResult<List<Flight>>> GetFlightsByDateAsync([FromQuery(Name = "relative_to")] DateTime relativeTo)
+        public async Task<ActionResult<List<Flight>>> GetFlightsByDateAsync(
+            [FromQuery(Name = "relative_to")] DateTime relativeTo)
         {
+
             List<Flight> flightList = new List<Flight>();
             Dictionary<string, FlightPlan> flightPlans;
             // check if there any flight at all
@@ -238,7 +246,8 @@ namespace FlightSimulatorWebApi.Controllers
             }
             //check from other servers
             Dictionary<string, Servers> servers;
-            if (!Request.QueryString.Value.Contains("sync_all") || !cache.TryGetValue("servers", out servers))
+            if (!Request.QueryString.Value.Contains("sync_all") ||
+                !cache.TryGetValue("servers", out servers))
             {
                 return flightList;
             }
@@ -247,7 +256,8 @@ namespace FlightSimulatorWebApi.Controllers
                 try
                 {
                     // async query other servers their flights
-                    HttpResponseMessage response = await client.GetAsync(server.Value.ServerURL + "/api/Flights?relative_to=" + relativeTo.ToString("yyyy-MM-ddTHH:mm:ssZ"));
+                    HttpResponseMessage response = await client.GetAsync(server.Value.ServerURL +
+                        "/api/Flights?relative_to=" + relativeTo.ToString("yyyy-MM-ddTHH:mm:ssZ"));
                     response.EnsureSuccessStatusCode();
                     var resp = await response.Content.ReadAsStringAsync();
                     List<Flight> serverFlights = JsonConvert.DeserializeObject<List<Flight>>(resp);
@@ -271,7 +281,7 @@ namespace FlightSimulatorWebApi.Controllers
         /// <returns></returns>
         [HttpDelete]
         [Route("Flights/{id}")]
-        public ActionResult<string> DeleteFlight(string id)
+        public ActionResult<FlightPlan> DeleteFlight(string id)
         {
             Dictionary<string, FlightPlan> flightPlans;
             if (!cache.TryGetValue("FlightPlans", out flightPlans))
