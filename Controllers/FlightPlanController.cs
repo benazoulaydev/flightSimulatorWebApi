@@ -80,7 +80,7 @@ namespace FlightSimulatorWebApi.Controllers
                 flightPlanID = GetFlightID();
             } while (flightPlans.ContainsKey(flightPlanID));
             flightPlans.Add(flightPlanID, info);
-            return Ok(info);
+            return info;
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace FlightSimulatorWebApi.Controllers
                 }
 
             }
-            return Ok(flightPlan); ;
+            return flightPlan;
         }
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace FlightSimulatorWebApi.Controllers
 
                     FlightPlan serverflightPlan = JsonConvert.DeserializeObject<FlightPlan>(resp);
 
-                    return Ok(serverflightPlan);
+                    return serverflightPlan;
 
 
 
@@ -252,7 +252,7 @@ namespace FlightSimulatorWebApi.Controllers
             if (!Request.QueryString.Value.Contains("sync_all") ||
                 !cache.TryGetValue("servers", out servers))
             {
-                return Ok(flightList);
+                return flightList;
             }
             foreach (KeyValuePair<string, Servers> server in servers)
             {
@@ -273,7 +273,7 @@ namespace FlightSimulatorWebApi.Controllers
                     break;
                 }
             }
-            return Ok(flightList);
+            return flightList;
         }
 
 
@@ -284,7 +284,7 @@ namespace FlightSimulatorWebApi.Controllers
         /// <returns></returns>
         [HttpDelete]
         [Route("Flights/{id}")]
-        public ActionResult<FlightPlan> DeleteFlight(string id)
+        public ActionResult<string> DeleteFlight(string id)
         {
             Dictionary<string, FlightPlan> flightPlans;
             if (!cache.TryGetValue("FlightPlans", out flightPlans))
@@ -297,7 +297,7 @@ namespace FlightSimulatorWebApi.Controllers
                 return NotFound();
             }
             flightPlans.Remove(id);
-            return Ok(id);
+            return id;
         }
 
         /// <summary>
