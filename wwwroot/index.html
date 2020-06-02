@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="css/site.css" />
     <link rel="stylesheet" href="css/flight_list.css" />
     <script src="lib/leaflet/leaflet.js"></script>
+
     <style>
     </style>
 </head>
@@ -51,6 +52,7 @@
     </div>
     <div id='alrt' class="alert alert-danger" style="opacity:0.0"></div>
     <script>
+	
         var map = L.map('map').invalidateSize();
         L.tileLayer('https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=f8r453uR6vELlt49X1ng', {
             attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
@@ -148,8 +150,9 @@
     </script>
     <script src="lib/jquery/dist/jquery.min.js"></script>
     <script src="lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<!--    <script src="js/site.js" asp-append-version="true"></script>-->
-    <script src="js/ajaxFlight.js" asp-append-version="true"></script>
+    <!--    <script src="js/site.js" asp-append-version="true"></script>-->
+	<script src="js/ajaxFlight.js"></script>
     <script src="js/flights_list.js"></script>
+
 </body>
 </html>

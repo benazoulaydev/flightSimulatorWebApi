@@ -37,7 +37,7 @@
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="mkdir $(SolutionDir)wwwroot&#xD;&#xA;xcopy $(ProjectDir)wwwroot /S /Y&#xD;&#xA;mkdir $(TargetDir)wwwroot&#xD;&#xA;xcopy $(ProjectDir)wwwroot $(TargetDir)wwwroot /S /Y&#xD;&#xA;xcopy $(ProjectDir)appsettings.json $(SolutinDir)wwwroot /Y&#xD;&#xA;" />
+    <Exec Command="mkdir $(TargetDir)wwwroot&#xD;&#xA;xcopy $(ProjectDir)wwwroot $(TargetDir)wwwroot /S /Y&#xD;" />
   </Target>
 
 </Project>

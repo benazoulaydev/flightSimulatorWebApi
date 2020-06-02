@@ -236,14 +236,17 @@ namespace FlightSimulatorWebApi.Controllers
             // check if there any flight at all
             if (!cache.TryGetValue("FlightPlans", out flightPlans))
             {
-                return Ok(flightList); // return empty list
+                flightPlans = new Dictionary<string, FlightPlan>();
+                cache.Set("FlightPlans", flightPlans);
             }
-
             // going throw each flight
             foreach (KeyValuePair<string, FlightPlan> entry in flightPlans)
             {
                 AddToFlightListIfShould(entry, flightList, relativeTo);
             }
+
+
+
             //check from other servers
             Dictionary<string, Servers> servers;
             if (!Request.QueryString.Value.Contains("sync_all") ||

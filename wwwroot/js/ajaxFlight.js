@@ -1,7 +1,10 @@
 ﻿
 //call function 4 time per sec (every 250 milisec)
-setInterval(get_flight_time, 1000);
 
+(function loop() {
+    get_flight_time();
+    setTimeout(loop, 1000); //recurse
+})();
 function get_flight_time() {
 
     var today = new Date();
@@ -21,6 +24,7 @@ function get_flight_time() {
             display_flights(result);
             display_planes_icons(result);
             // call function with parameter result
+			console.log(result);
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
 
